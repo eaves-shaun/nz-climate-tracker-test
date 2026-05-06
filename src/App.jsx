@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   ComposedChart,
   Line,
@@ -13,13 +14,6 @@ import {
   ReferenceLine
 } from "recharts";
 
-function Card({ children, className = "" }) {
-  return <div className={className}>{children}</div>;
-}
-
-function CardContent({ children, className = "" }) {
-  return <div className={className}>{children}</div>;
-}
 // Dashboard expects the newer CSV exported from GEE with these columns:
 // district_id,district_name,date,year,month,temp_c,precip_mm,clim_temp_c,clim_precip_mm,temp_anom_c,precip_anom_pct,area_m2,n_original_features,buffered_any,auckland_grouped
 //
@@ -70,13 +64,13 @@ const VARIABLES = {
     valueField: "precip_mm",
     unit: "mm",
     anomalyUnit: "%",
-    positiveLabel: "Wetter",
-    negativeLabel: "Drier",
-    positiveColor: "#2563eb",
+    positiveLabel: "Wettest",
+    negativeLabel: "Driest",
+    positiveColor: "#16a34a",
     negativeColor: "#b45309",
-    positiveBg: "bg-blue-50",
+    positiveBg: "bg-green-50",
     negativeBg: "bg-amber-50",
-    positiveBorder: "border-blue-300",
+    positiveBorder: "border-green-300",
     negativeBorder: "border-amber-300"
   }
 };
@@ -123,6 +117,24 @@ function mean(values) {
   const valid = values.map(toNumber).filter((value) => value !== null);
   if (!valid.length) return null;
   return valid.reduce((sum, value) => sum + value, 0) / valid.length;
+}
+
+function weightedMean(values, weights) {
+  const pairs = values
+    .map((value, index) => ({
+      value: toNumber(value),
+      weight: toNumber(weights[index])
+    }))
+    .filter((pair) => pair.value !== null && pair.weight !== null && pair.weight > 0);
+
+  if (!pairs.length) return null;
+
+  const weightedSum = pairs.reduce((sum, pair) => sum + pair.value * pair.weight, 0);
+  const totalWeight = pairs.reduce((sum, pair) => sum + pair.weight, 0);
+
+  if (totalWeight === 0) return null;
+
+  return weightedSum / totalWeight;
 }
 
 function parseCsvLine(line) {
@@ -172,7 +184,7 @@ function normaliseRows(rows) {
         temp_anom_c: tempAnom,
         precip_anom_pct: precipAnom,
         anomaly_c: tempAnom,
-        area_m2: toNumber(row.area_m2),
+        area_m2: toNumber(row.area_m2) ?? 1,
         n_original_features: toNumber(row.n_original_features),
         buffered_any: cleanText(row.buffered_any),
         auckland_grouped: cleanText(row.auckland_grouped)
@@ -262,11 +274,12 @@ function aggregateRows(rows, getGroupKey) {
       district_key: first.district_key,
       year,
       month: null,
-      temp_c: mean(groupRows.map((row) => row.temp_c)),
-      precip_mm: mean(groupRows.map((row) => row.precip_mm)),
-      temp_anom_c: mean(groupRows.map((row) => row.temp_anom_c)),
-      precip_anom_pct: mean(groupRows.map((row) => row.precip_anom_pct)),
-      anomaly_c: mean(groupRows.map((row) => row.temp_anom_c))
+      temp_c: weightedMean(groupRows.map((row) => row.temp_c), groupRows.map((row) => row.area_m2)),
+      precip_mm: weightedMean(groupRows.map((row) => row.precip_mm), groupRows.map((row) => row.area_m2)),
+      temp_anom_c: weightedMean(groupRows.map((row) => row.temp_anom_c), groupRows.map((row) => row.area_m2)),
+      precip_anom_pct: weightedMean(groupRows.map((row) => row.precip_anom_pct), groupRows.map((row) => row.area_m2)),
+      anomaly_c: weightedMean(groupRows.map((row) => row.temp_anom_c), groupRows.map((row) => row.area_m2)),
+      area_m2: mean(groupRows.map((row) => row.area_m2))
     };
   }).filter((row) => row.year !== null && row.temp_anom_c !== null);
 }
@@ -320,13 +333,29 @@ function getNationalPeriodMeanAnomalies(rows, period, variable = VARIABLES.temp)
   periodRows.forEach((row) => {
     const value = row[variable.anomalyField];
     if (!Number.isFinite(value)) return;
+
     if (!grouped.has(row.year)) grouped.set(row.year, []);
-    grouped.get(row.year).push(value);
+
+    grouped.get(row.year).push({
+      value,
+      area: toNumber(row.area_m2) ?? 1
+    });
   });
 
   return Array.from(grouped.entries())
     .sort(([a], [b]) => a - b)
-    .map(([year, values]) => ({ year, national_period_anomaly: mean(values), national_period_anomaly_c: mean(values) }));
+    .map(([year, entries]) => {
+      const weighted = weightedMean(
+        entries.map((entry) => entry.value),
+        entries.map((entry) => entry.area)
+      );
+
+      return {
+        year,
+        national_period_anomaly: weighted,
+        national_period_anomaly_c: weighted
+      };
+    });
 }
 
 function getNationalMonthMeanAnomalies(rows, month) {
@@ -385,7 +414,7 @@ function getHeatmapColor(value, maxAbs, variable = VARIABLES.temp) {
   const lightness = 96 - intensity * 42;
 
   if (variable.value === "precip") {
-    if (value >= 0) return `hsl(217 78% ${lightness}%)`;
+    if (value >= 0) return `hsl(142 65% ${lightness}%)`;
     return `hsl(32 75% ${lightness}%)`;
   }
 
@@ -449,6 +478,8 @@ function runSelfTests() {
   console.assert(mean([1, 2, 3]) === 2, "mean should average numeric values");
   console.assert(mean([]) === null, "mean should return null for empty arrays");
   console.assert(mean([1, NaN, 3]) === 2, "mean should ignore non-finite values");
+  console.assert(weightedMean([1, 3], [1, 3]) === 2.5, "weightedMean should compute weighted averages correctly");
+  console.assert(weightedMean([1, 3], [0, 0]) === null, "weightedMean should return null for zero total weights");
 
   const parsed = parseTemperatureCsv("district_id,district_name,date,year,month,temp_c,anomalies\n1,Test,2000-01,2000,1,12.5,-0.2");
   console.assert(parsed.length === 1, "CSV parser should parse one row");
@@ -476,6 +507,9 @@ function runSelfTests() {
   console.assert(mergeAnnualAndMonthly([{ year: 2000, annual_anomaly_c: 0.1 }], [{ year: 2000, period_anomaly_c: 0.2 }])[0].month_anomaly_c === 0.2, "merged chart rows should combine annual and monthly values");
   console.assert(formatAnomaly(1.234, VARIABLES.temp) === "+1.23 °C", "positive temperature anomalies should show plus sign");
   console.assert(formatAnomaly(12.345, VARIABLES.precip) === "+12.35 %", "positive precipitation anomalies should show percent units");
+  console.assert(VARIABLES.precip.positiveLabel === "Wettest", "precipitation positive panel label should use wettest wording");
+  console.assert(VARIABLES.precip.negativeLabel === "Driest", "precipitation negative panel label should use driest wording");
+  console.assert(VARIABLES.precip.positiveColor === "#16a34a", "positive precipitation content should use green");
   console.assert(normaliseRows(sampleData)[0].precip_anom_pct === -12, "normaliseRows should preserve precipitation anomalies");
   console.assert(periodLabel(getPeriodConfig("annual")) === "Annual mean", "period label should return annual mean label");
   console.assert(periodLabel(getPeriodConfig("DJF")) === "DJF", "period label should return seasonal label");
