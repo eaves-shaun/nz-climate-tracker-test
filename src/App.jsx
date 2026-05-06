@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+
 import {
   ComposedChart,
   Line,
@@ -13,6 +13,14 @@ import {
   Legend,
   ReferenceLine
 } from "recharts";
+
+function Card({ children, className = "" }) {
+  return <div className={className}>{children}</div>;
+}
+
+function CardContent({ children, className = "" }) {
+  return <div className={className}>{children}</div>;
+}
 
 // Dashboard expects the newer CSV exported from GEE with these columns:
 // district_id,district_name,date,year,month,temp_c,precip_mm,clim_temp_c,clim_precip_mm,temp_anom_c,precip_anom_pct,area_m2,n_original_features,buffered_any,auckland_grouped
