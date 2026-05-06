@@ -1,0 +1,93 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f8fafc; color: #0f172a; }
+button, select, input { font: inherit; }
+.min-h-screen { min-height: 100vh; }
+.bg-slate-50 { background-color: #f8fafc; }
+.bg-white { background-color: #fff; }
+.bg-red-50 { background-color: #fef2f2; }
+.bg-blue-50 { background-color: #eff6ff; }
+.text-slate-900 { color: #0f172a; }
+.text-slate-600 { color: #475569; }
+.text-slate-500 { color: #64748b; }
+.text-amber-900 { color: #78350f; }
+.text-sm { font-size: .875rem; line-height: 1.25rem; }
+.text-xs { font-size: .75rem; line-height: 1rem; }
+.text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+.text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+.text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.tracking-tight { letter-spacing: -0.025em; }
+.tracking-wide { letter-spacing: .025em; }
+.uppercase { text-transform: uppercase; }
+.max-w-7xl { max-width: 80rem; }
+.max-w-3xl { max-width: 48rem; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.mt-1 { margin-top: .25rem; }
+.mt-2 { margin-top: .5rem; }
+.mt-3 { margin-top: .75rem; }
+.mb-2 { margin-bottom: .5rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-5 { margin-bottom: 1.25rem; }
+.p-4 { padding: 1rem; }
+.p-5 { padding: 1.25rem; }
+.p-6 { padding: 1.5rem; }
+.pr-2 { padding-right: .5rem; }
+.pb-2 { padding-bottom: .5rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.py-3 { padding-top: .75rem; padding-bottom: .75rem; }
+.space-y-1 > * + * { margin-top: .25rem; }
+.space-y-2 > * + * { margin-top: .5rem; }
+.space-y-6 > * + * { margin-top: 1.5rem; }
+.grid { display: grid; }
+.flex { display: flex; }
+.block { display: block; }
+.items-center { align-items: center; }
+.items-end { align-items: flex-end; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.gap-2 { gap: .5rem; }
+.gap-3 { gap: .75rem; }
+.gap-4 { gap: 1rem; }
+.gap-6 { gap: 1.5rem; }
+.gap-px { gap: 1px; }
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.w-full { width: 100%; }
+.w-3 { width: .75rem; }
+.w-4 { width: 1rem; }
+.w-20 { width: 5rem; }
+.h-3 { height: .75rem; }
+.h-5 { height: 1.25rem; }
+.h-8 { height: 2rem; }
+.h-\[2px\] { height: 2px; }
+.h-\[32rem\] { height: 32rem; }
+.rounded-2xl { border-radius: 1rem; }
+.rounded-full { border-radius: 9999px; }
+.rounded-\[2px\] { border-radius: 2px; }
+.border { border-width: 1px; border-style: solid; }
+.border-white { border-color: #fff; }
+.border-slate-200 { border-color: #e2e8f0; }
+.border-red-300 { border-color: #fca5a5; }
+.border-blue-300 { border-color: #93c5fd; }
+.shadow-sm { box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+.shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1); }
+.outline-none { outline: 2px solid transparent; outline-offset: 2px; }
+.overflow-x-auto { overflow-x: auto; }
+.sticky { position: sticky; }
+.left-0 { left: 0; }
+.z-10 { z-index: 10; }
+.origin-center { transform-origin: center; }
+.-rotate-45 { transform: rotate(-45deg); }
+.text-\[0\.65rem\] { font-size: .65rem; }
+.bg-red-500 { background-color: #ef4444; }
+.bg-blue-500 { background-color: #3b82f6; }
+.bg-gray-500 { background-color: #6b7280; }
+.bg-gradient-to-r { background-image: linear-gradient(to right, var(--tw-gradient-stops)); }
+.from-blue-600 { --tw-gradient-from: #2563eb; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to); }
+.via-slate-100 { --tw-gradient-via: #f1f5f9; }
+.to-red-600 { --tw-gradient-to: #dc2626; }
+.focus\:border-slate-400:focus { border-color: #94a3b8; }
+@media (min-width: 640px) { .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (min-width: 768px) { .md\:p-10 { padding: 2.5rem; } .md\:text-5xl { font-size: 3rem; line-height: 1; } .md\:flex-row { flex-direction: row; } .md\:items-end { align-items: flex-end; } }
+@media (min-width: 1024px) { .lg\:flex-row { flex-direction: row; } .lg\:items-end { align-items: flex-end; } .lg\:justify-between { justify-content: space-between; } .lg\:w-\[32rem\] { width: 32rem; } }
+@media (min-width: 1280px) { .xl\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0,1fr)); } }
