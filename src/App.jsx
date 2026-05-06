@@ -56,8 +56,8 @@ const VARIABLES = {
     valueField: "temp_c",
     unit: "°C",
     anomalyUnit: "°C",
-    positiveLabel: "Warmest",
-    negativeLabel: "Coolest",
+    positiveLabel: "Warmer",
+    negativeLabel: "Cooler",
     positiveColor: "#dc2626",
     negativeColor: "#2563eb",
     positiveBg: "bg-red-50",
@@ -262,7 +262,7 @@ function getSeasonRows(rows, season) {
   return rows.filter((row) => config.months.includes(row.month));
 }
 
-function aggregateRows(rows, getGroupKey) {
+function aggregateRows(rows, getGroupKey, requiredMonthCount = null) {
   const grouped = new Map();
 
   rows.forEach((row) => {
@@ -272,6 +272,9 @@ function aggregateRows(rows, getGroupKey) {
   });
 
   return Array.from(grouped.entries()).map(([groupKey, groupRows]) => {
+    const uniqueMonths = new Set(groupRows.map((row) => row.month));
+    if (requiredMonthCount !== null && uniqueMonths.size !== requiredMonthCount) return null;
+
     const first = groupRows[0];
     const parts = String(groupKey).split("__");
     const year = toNumber(parts[parts.length - 1]);
@@ -289,19 +292,19 @@ function aggregateRows(rows, getGroupKey) {
       anomaly_c: weightedMean(groupRows.map((row) => row.temp_anom_c), groupRows.map((row) => row.area_m2)),
       area_m2: mean(groupRows.map((row) => row.area_m2))
     };
-  }).filter((row) => row.year !== null && row.temp_anom_c !== null);
+  }).filter((row) => row && row.year !== null && row.temp_anom_c !== null);
 }
 
 function getPeriodRows(rows, period) {
   if (!period) return [];
 
   if (period.type === "annual") {
-    return aggregateRows(rows, (row) => `${row.district_key}__${row.year}`);
+    return aggregateRows(rows, (row) => `${row.district_key}__${row.year}`, 12);
   }
 
   if (period.type === "season") {
     const seasonRows = getSeasonRows(rows, period.value);
-    return aggregateRows(seasonRows, (row) => `${row.district_key}__${getSeasonYear(row, period.value)}`);
+    return aggregateRows(seasonRows, (row) => `${row.district_key}__${getSeasonYear(row, period.value)}`, 3);
   }
 
   return rows.filter((row) => row.month === period.month);
@@ -510,8 +513,14 @@ function runSelfTests() {
   console.assert(getPeriodConfig("annual").type === "annual", "period config should support annual means");
   console.assert(getPeriodConfig("DJF").type === "season", "period config should support seasons");
   console.assert(getPeriodConfig("1").type === "month", "period config should support months");
-  console.assert(getPeriodRows(normaliseRows(sampleData), getPeriodConfig("annual")).length === 6, "annual period rows should aggregate by district and year");
-  console.assert(getPeriodRows(normaliseRows(sampleData), getPeriodConfig("DJF")).length === 6, "seasonal period rows should aggregate by district and season-year");
+  console.assert(getPeriodRows(normaliseRows(sampleData), getPeriodConfig("annual")).length === 0, "annual period rows should exclude incomplete years");
+  console.assert(getPeriodRows(normaliseRows(sampleData), getPeriodConfig("DJF")).length === 0, "seasonal period rows should exclude incomplete seasons");
+  const completeYearRows = normaliseRows([
+    ...Array.from({ length: 12 }, (_, i) => ({ district_id: "1", district_name: "Complete", date: `2000-${String(i + 1).padStart(2, "0")}`, year: 2000, month: i + 1, temp_c: 10, precip_mm: 100, temp_anom_c: 1, precip_anom_pct: 10, area_m2: 2 }))
+  ]);
+  console.assert(getPeriodRows(completeYearRows, getPeriodConfig("annual")).length === 1, "annual period rows should include complete years only");
+  const completeDjfRows = normaliseRows([
+    { district_id: "1", district_na
   console.assert(mergeAnnualAndMonthly([{ year: 2000, annual_anomaly_c: 0.1 }], [{ year: 2000, period_anomaly_c: 0.2 }])[0].month_anomaly_c === 0.2, "merged chart rows should combine annual and monthly values");
   console.assert(formatAnomaly(1.234, VARIABLES.temp) === "+1.23 °C", "positive temperature anomalies should show plus sign");
   console.assert(formatAnomaly(12.345, VARIABLES.precip) === "+12.35 %", "positive precipitation anomalies should show percent units");
