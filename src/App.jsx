@@ -520,8 +520,19 @@ function runSelfTests() {
   ]);
   console.assert(getPeriodRows(completeYearRows, getPeriodConfig("annual")).length === 1, "annual period rows should include complete years only");
   const completeDjfRows = normaliseRows([
-    { district_id: "1", district_na
-  console.assert(mergeAnnualAndMonthly([{ year: 2000, annual_anomaly_c: 0.1 }], [{ year: 2000, period_anomaly_c: 0.2 }])[0].month_anomaly_c === 0.2, "merged chart rows should combine annual and monthly values");
+    { district_id: "1", district_name: "Complete", date: "1999-12", year: 1999, month: 12, temp_c: 10, precip_mm: 100, temp_anom_c: 1, precip_anom_pct: 10, area_m2: 2 },
+    { district_id: "1", district_name: "Complete", date: "2000-01", year: 2000, month: 1, temp_c: 10, precip_mm: 100, temp_anom_c: 1, precip_anom_pct: 10, area_m2: 2 },
+    { district_id: "1", district_name: "Complete", date: "2000-02", year: 2000, month: 2, temp_c: 10, precip_mm: 100, temp_anom_c: 1, precip_anom_pct: 10, area_m2: 2 }
+  ]);
+  console.assert(getPeriodRows(completeDjfRows, getPeriodConfig("DJF")).length === 1, "DJF should include complete Dec-Jan-Feb seasons only");
+
+  console.assert(
+    mergeAnnualAndMonthly(
+      [{ year: 2000, annual_anomaly_c: 0.1 }],
+      [{ year: 2000, period_anomaly: 0.2 }]
+    )[0].month_anomaly_c === 0.2,
+    "merged chart rows should combine annual and monthly values"
+  );
   console.assert(formatAnomaly(1.234, VARIABLES.temp) === "+1.23 °C", "positive temperature anomalies should show plus sign");
   console.assert(formatAnomaly(12.345, VARIABLES.precip) === "+12.35 %", "positive precipitation anomalies should show percent units");
   console.assert(VARIABLES.precip.positiveLabel === "Wettest", "precipitation positive panel label should use wettest wording");
@@ -890,6 +901,15 @@ export default function NZERA5DashboardPrototype() {
         <Card className="rounded-2xl shadow-sm">
           <CardContent className="p-5 text-sm text-slate-600 space-y-2">
             <h2 className="text-xl font-semibold text-slate-900">Implementation notes</h2>
+            <p>
+              This version uses <code>district_name</code> as the dashboard key. It supports temperature anomalies in <code>temp_anom_c</code> and precipitation anomalies in <code>precip_anom_pct</code>.
+            </p>
+            <p>
+              DJF is assigned to the year of January and February, so December 2023 plus January 2024 and February 2024 are labelled DJF 2024.
+            </p>
+            <p>
+              For public deployment, place the compact CSV at <code>public/data/nz_grouped_era5land_monthly_195001_202604.csv</code>. The dashboard loads that fixed file automatically at startup.
+            </p>
             <p>
               This version uses <code>district_name</code> as the dashboard key. It supports temperature anomalies in <code>temp_anom_c</code> and precipitation anomalies in <code>precip_anom_pct</code>.
             </p>
