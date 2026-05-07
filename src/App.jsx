@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import StatPanel from "./components/StatPanel";
 import AnomalyChart from "./components/AnomalyChart";
+import HeatmapMatrix from "./components/HeatmapMatrix";
 
 function Card({ children, className = "" }) {
   return <div className={className}>{children}</div>;
@@ -677,50 +678,20 @@ export default function NZERA5DashboardPrototype() {
                 <span>{selectedVariable.positiveLabel}</span>
               </div>
             </div>
+            
+            <HeatmapMatrix
+              MONTHS={MONTHS}
+              heatmapRows={heatmapRows}
+              heatmapYears={heatmapYears}
+              heatmapMaxAbs={heatmapMaxAbs}
+              selectedVariable={selectedVariable}
+              findMatrixCell={findMatrixCell}
+              getHeatmapColor={getHeatmapColor}
+              formatAnomaly={formatAnomaly}
+              formatValue={formatValue}
+            />
+            
 
-            <div className="overflow-x-auto pb-2">
-              <div
-                className="grid gap-px text-xs"
-                style={{
-                  gridTemplateColumns: `4.5rem repeat(${heatmapYears.length}, minmax(1.45rem, 1fr))`,
-                  minWidth: `${Math.max(860, heatmapYears.length * 24 + 90)}px`
-                }}
-              >
-                <div className="sticky left-0 z-10 bg-white" />
-                {heatmapYears.map((year) => (
-                  <div
-                    key={`year-${year}`}
-                    className="h-8 flex items-center justify-center text-[0.65rem] text-slate-500 -rotate-45 origin-center"
-                  >
-                    {year}
-                  </div>
-                ))}
-
-                {MONTHS.map((month) => (
-                  <React.Fragment key={`month-row-${month.value}`}>
-                    <div className="sticky left-0 z-10 bg-white pr-2 flex items-center text-slate-600 font-medium">
-                      {month.label.slice(0, 3)}
-                    </div>
-                    {heatmapYears.map((year) => {
-                      const cell = findMatrixCell(heatmapRows, year, month.value);
-                      const title = cell
-                        ? `${month.label} ${year}: anomaly ${formatAnomaly(cell.anomaly, selectedVariable)}, value ${formatValue(cell.display_value, selectedVariable)}`
-                        : `${month.label} ${year}: no data`;
-
-                      return (
-                        <div
-                          key={`${month.value}-${year}`}
-                          title={title}
-                          aria-label={title}
-                          className="h-5 rounded-[2px] border border-white"
-                          style={{ backgroundColor: getHeatmapColor(cell?.anomaly, heatmapMaxAbs, selectedVariable) }}
-                        />
-                      );
-                    })}
-                  </React.Fragment>
-                ))}
-              </div>
-            </div>
           </CardContent>
         </Card>
 
