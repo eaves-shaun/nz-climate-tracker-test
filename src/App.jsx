@@ -522,7 +522,7 @@ function DashboardTooltip({ active, payload, label, variable }) {
 }
 
 export default function NZERA5DashboardPrototype() {
-  const initialRows = useMemo(() => normaliseRows(sampleData), []);
+  const [rows, setRows] = useState([]);
   const [rows, setRows] = useState(initialRows);
   const [dataStatus, setDataStatus] = useState(`Loading data from ${CSV_URL}...`);
   const districts = useMemo(() => getDistricts(rows), [rows]);
