@@ -9,7 +9,9 @@ export default function StatPanel({
   formatAnomaly,
   periodDetail
 }) {
-  const anomaly = row ? row[variable.anomalyField] ?? row.anomaly_c : null;
+  const anomaly = row
+    ? row[variable.anomalyField] ?? row.period_anomaly ?? row.anomaly_c
+    : null;
 
   const bg = row
     ? anomaly >= 0
