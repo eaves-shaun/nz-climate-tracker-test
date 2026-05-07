@@ -1,7 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-import StatPanel from "./components/StatPanel";
-
 import {
   ComposedChart,
   Line,
@@ -15,6 +13,8 @@ import {
   Legend,
   ReferenceLine
 } from "recharts";
+
+import StatPanel from "./components/StatPanel";
 
 function Card({ children, className = "" }) {
   return <div className={className}>{children}</div>;
