@@ -545,7 +545,7 @@ export default function NZERA5DashboardPrototype() {
         <header className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
           <div>
             <p className="text-sm uppercase tracking-wide text-slate-500">ERA5-Land / New Zealand districts</p>
-            <h1 className="text-3xl md:text-5xl font-semibold tracking-tight">Climate anomaly dashboard</h1>
+            <h1 className="text-3xl md:text-5xl font-semibold tracking-tight">NZ Climate Tracker</h1>
             <p className="mt-3 max-w-3xl text-slate-600">
               Choose a variable, district, and period to identify local anomaly extremes, national anomaly extremes, and compare the selected district with the nationwide mean.
             </p>
