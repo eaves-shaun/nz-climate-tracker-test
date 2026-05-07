@@ -33,20 +33,10 @@ function CardContent({ children, className = "" }) {
 const APP_BASE_URL = import.meta.env?.BASE_URL ?? "/";
 const CSV_URL = `${APP_BASE_URL}data/nz_grouped_era5land_monthly_195001_202604.csv`;
 
-const sampleData = [
-  { district_id: "001", district_name: "Wellington City", date: "1950-01", year: 1950, month: 1, temp_c: 15.1, precip_mm: 52, temp_anom_c: -0.4, precip_anom_pct: -12 },
-  { district_id: "001", district_name: "Wellington City", date: "1950-02", year: 1950, month: 2, temp_c: 15.7, precip_mm: 48, temp_anom_c: -0.2, precip_anom_pct: -18 },
-  { district_id: "001", district_name: "Wellington City", date: "1951-01", year: 1951, month: 1, temp_c: 16.4, precip_mm: 80, temp_anom_c: 0.9, precip_anom_pct: 34 },
-  { district_id: "001", district_name: "Wellington City", date: "1951-02", year: 1951, month: 2, temp_c: 14.9, precip_mm: 96, temp_anom_c: -1.0, precip_anom_pct: 62 },
-  { district_id: "001", district_name: "Wellington City", date: "2024-01", year: 2024, month: 1, temp_c: 17.4, precip_mm: 38, temp_anom_c: 1.7, precip_anom_pct: -36 },
-  { district_id: "001", district_name: "Wellington City", date: "2024-02", year: 2024, month: 2, temp_c: 18.1, precip_mm: 75, temp_anom_c: 1.3, precip_anom_pct: 27 },
-  { district_id: "002", district_name: "Auckland", date: "1950-01", year: 1950, month: 1, temp_c: 18.4, precip_mm: 72, temp_anom_c: -0.2, precip_anom_pct: -8 },
-  { district_id: "002", district_name: "Auckland", date: "1950-02", year: 1950, month: 2, temp_c: 19.0, precip_mm: 66, temp_anom_c: 0.1, precip_anom_pct: -22 },
-  { district_id: "002", district_name: "Auckland", date: "1951-01", year: 1951, month: 1, temp_c: 17.2, precip_mm: 132, temp_anom_c: -1.4, precip_anom_pct: 55 },
-  { district_id: "002", district_name: "Auckland", date: "1951-02", year: 1951, month: 2, temp_c: 20.2, precip_mm: 42, temp_anom_c: 1.2, precip_anom_pct: -50 },
-  { district_id: "002", district_name: "Auckland", date: "2024-01", year: 2024, month: 1, temp_c: 20.4, precip_mm: 140, temp_anom_c: 1.8, precip_anom_pct: 65 },
-  { district_id: "002", district_name: "Auckland", date: "2024-02", year: 2024, month: 2, temp_c: 20.9, precip_mm: 84, temp_anom_c: 1.6, precip_anom_pct: -1 }
-];
+const sampleData = [];
+
+const initialRows = useMemo(() => normaliseRows(sampleData), []);
+const [districtKey, setDistrictKey] = useState("");
 
 const VARIABLES = {
   temp: {
