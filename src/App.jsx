@@ -633,6 +633,8 @@ export default function NZERA5DashboardPrototype() {
             detailMode="district"
             period={selectedPeriod}
             variable={selectedVariable}
+            formatAnomaly={formatAnomaly}
+            periodDetail={periodDetail}
           />
           <StatPanel
             title={`${districtName}: ${selectedVariable.negativeLabel.toLowerCase()} ${selectedPeriodLabel}`}
@@ -640,6 +642,8 @@ export default function NZERA5DashboardPrototype() {
             detailMode="district"
             period={selectedPeriod}
             variable={selectedVariable}
+            formatAnomaly={formatAnomaly}
+            periodDetail={periodDetail}
           />
           <StatPanel
             title={`NZ ${selectedVariable.positiveLabel.toLowerCase()} ${selectedPeriodLabel} anomaly`}
@@ -647,6 +651,8 @@ export default function NZERA5DashboardPrototype() {
             detailMode="country"
             period={selectedPeriod}
             variable={selectedVariable}
+            formatAnomaly={formatAnomaly}
+            periodDetail={periodDetail}
           />
           <StatPanel
             title={`NZ ${selectedVariable.negativeLabel.toLowerCase()} ${selectedPeriodLabel} anomaly`}
@@ -654,6 +660,8 @@ export default function NZERA5DashboardPrototype() {
             detailMode="country"
             period={selectedPeriod}
             variable={selectedVariable}
+            formatAnomaly={formatAnomaly}
+            periodDetail={periodDetail}
           />
         </section>
 
