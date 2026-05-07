@@ -35,9 +35,6 @@ const CSV_URL = `${APP_BASE_URL}data/nz_grouped_era5land_monthly_195001_202604.c
 
 const sampleData = [];
 
-const initialRows = useMemo(() => normaliseRows(sampleData), []);
-const [districtKey, setDistrictKey] = useState("");
-
 const VARIABLES = {
   temp: {
     value: "temp",
@@ -529,7 +526,7 @@ export default function NZERA5DashboardPrototype() {
   const [rows, setRows] = useState(initialRows);
   const [dataStatus, setDataStatus] = useState(`Loading data from ${CSV_URL}...`);
   const districts = useMemo(() => getDistricts(rows), [rows]);
-  const [districtKey, setDistrictKey] = useState(initialRows[0]?.district_key ?? "");
+  const [districtKey, setDistrictKey] = useState("");
   const [periodValue, setPeriodValue] = useState("1");
   const [variableValue, setVariableValue] = useState("temp");
 
