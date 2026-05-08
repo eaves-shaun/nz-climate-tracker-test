@@ -11,6 +11,8 @@ export default function HeatmapMatrix({
   formatAnomaly,
   formatValue
 }) {
+  const [hoveredCell, setHoveredCell] = React.useState(null);
+  
   return (
     <div className="overflow-x-auto pb-2">
       <div
