@@ -167,7 +167,7 @@ function normaliseRows(rows) {
         district_id: cleanText(row.district_id),
         district_name: districtName,
         district_key: `${cleanText(row.area_type || row.region_type || "district")}__${districtName}`,
-        area_type: cleanText(row.area_type || row.region_type || "district")
+        area_type: cleanText(row.area_type || row.region_type || "district"),
         date: cleanText(row.date),
         year: toNumber(row.year),
         month: toNumber(row.month),
