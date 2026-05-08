@@ -27,6 +27,32 @@ export default function AnomalyChart({
   setComparisonKey,
   primaryKey
 }) {
+  function exportSvg() {
+    const svg = document.querySelector(".recharts-surface");
+  
+    if (!svg) return;
+  
+    const serializer = new XMLSerializer();
+    const source = serializer.serializeToString(svg);
+  
+    const blob = new Blob([source], {
+      type: "image/svg+xml;charset=utf-8"
+    });
+  
+    const url = URL.createObjectURL(blob);
+  
+    const link = document.createElement("a");
+  
+    link.href = url;
+  
+    link.download = `${districtName}_${selectedPeriodLabel}.svg`
+      .replace(/\s+/g, "_");
+  
+    link.click();
+  
+    URL.revokeObjectURL(url);
+  }
+  
   function DashboardTooltip({ active, payload, label }) {
     if (!active || !payload?.length) return null;
 
@@ -48,19 +74,20 @@ export default function AnomalyChart({
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
+      <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-end">
+      
         <label className="block w-full max-w-sm">
           <span className="block text-sm font-medium text-slate-600 mb-2">
             Add comparison area
           </span>
-
+      
           <select
             className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm outline-none focus:border-slate-400"
             value={comparisonKey}
             onChange={(event) => setComparisonKey(event.target.value)}
           >
             <option value="">None</option>
-
+      
             {[
               ["national", "National"],
               ["island", "Islands"],
@@ -68,11 +95,13 @@ export default function AnomalyChart({
               ["district", "Districts"]
             ].map(([type, label]) => {
               const groupItems = districts.filter(
-                (item) => item.type === type && item.key !== primaryKey
+                (item) =>
+                  item.type === type &&
+                  item.key !== primaryKey
               );
-            
+      
               if (!groupItems.length) return null;
-            
+      
               return (
                 <optgroup key={type} label={label}>
                   {groupItems.map((item) => (
@@ -85,6 +114,15 @@ export default function AnomalyChart({
             })}
           </select>
         </label>
+      
+        <button
+          type="button"
+          onClick={exportSvg}
+          className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50"
+        >
+          Export SVG
+        </button>
+      
       </div>
 
       <div className="h-[32rem]">
