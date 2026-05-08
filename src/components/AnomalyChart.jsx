@@ -61,13 +61,28 @@ export default function AnomalyChart({
           >
             <option value="">None</option>
 
-            {districts
-              .filter((district) => district.key !== primaryKey)
-              .map((district) => (
-                <option key={district.key} value={district.key}>
-                  {district.name}
-                </option>
-              ))}
+            {[
+              ["national", "National"],
+              ["island", "Islands"],
+              ["region", "Regions"],
+              ["district", "Districts"]
+            ].map(([type, label]) => {
+              const groupItems = districts.filter(
+                (item) => item.type === type && item.key !== primaryKey
+              );
+            
+              if (!groupItems.length) return null;
+            
+              return (
+                <optgroup key={type} label={label}>
+                  {groupItems.map((item) => (
+                    <option key={item.key} value={item.key}>
+                      {item.name}
+                    </option>
+                  ))}
+                </optgroup>
+              );
+            })}
           </select>
         </label>
       </div>
