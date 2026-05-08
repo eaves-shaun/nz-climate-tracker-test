@@ -40,11 +40,11 @@ const VARIABLES = {
     positiveBg: "bg-red-50",
     negativeBg: "bg-blue-50",
     positiveBorder: "border-red-300",
-    negativeBorder: "border-blue-300"
+    negativeBorder: "border-blue-300",
     positiveBgColor: "#fef2f2",
     negativeBgColor: "#eff6ff",
     positiveBorderColor: "#fca5a5",
-    negativeBorderColor: "#93c5fd",
+    negativeBorderColor: "#93c5fd"
   },
   precip: {
     value: "precip",
@@ -60,11 +60,11 @@ const VARIABLES = {
     positiveBg: "bg-green-50",
     negativeBg: "bg-amber-50",
     positiveBorder: "border-green-300",
-    negativeBorder: "border-amber-300"
+    negativeBorder: "border-amber-300",
     positiveBgColor: "#f0fdf4",
     negativeBgColor: "#fffbeb",
     positiveBorderColor: "#86efac",
-    negativeBorderColor: "#fcd34d",
+    negativeBorderColor: "#fcd34d"
   }
 };
 
