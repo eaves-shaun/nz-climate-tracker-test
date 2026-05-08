@@ -14,7 +14,7 @@ import {
 
 export default function ClimatologyChart({ data }) {
   return (
-    <div style={{ width: "100%", height: 416, minWidth: 0 }}>
+    <div className="h-[32rem] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart
           data={data}
