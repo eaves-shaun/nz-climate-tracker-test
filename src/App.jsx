@@ -621,16 +621,26 @@ export default function NZERA5DashboardPrototype() {
     <div className="min-h-screen bg-slate-50 text-slate-900 p-6 md:p-10">
       <div className="max-w-7xl mx-auto space-y-6">
         <header className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
-          <div>
-            <p className="text-sm uppercase tracking-wide text-slate-500">ERA5-Land / New Zealand districts</p>
-            <h1 className="text-3xl md:text-5xl font-semibold tracking-tight">NZ Climate Tracker</h1>
-            <p className="mt-3 max-w-3xl text-slate-600">
-              Choose a variable, district, and period to identify local anomaly extremes, national anomaly extremes, and compare the selected district with the nationwide mean.
-            </p>
-            <p className="mt-2 text-xs text-slate-500">{dataStatus}</p>
-            <p className="mt-1 text-xs text-slate-500">
-              Loaded districts: {districts.length.toLocaleString()} | Rows for selected district/period: {districtPeriodRows.length.toLocaleString()} | Rows for selected period nationally: {countryPeriodRows.length.toLocaleString()}
-            </p>
+          <div className="flex items-start gap-4">
+          
+            <img
+              src={`${APP_BASE_URL}NZClimTracker-logo-noText.png`}
+              alt="NZ Climate Tracker logo"
+              className="w-14 h-14 md:w-16 md:h-16 object-contain mt-1"
+            />
+          
+            <div>
+              <p className="text-sm uppercase tracking-wide text-slate-500">
+                ERA5-Land / New Zealand districts
+              </p>
+          
+              <h1 className="text-3xl md:text-5xl font-semibold tracking-tight">
+                NZ Climate Tracker
+              </h1>
+          
+              
+            </div>
+          
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full lg:w-[48rem]">
