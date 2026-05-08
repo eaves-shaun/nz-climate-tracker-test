@@ -627,8 +627,8 @@ export default function NZERA5DashboardPrototype() {
               src={`${APP_BASE_URL}NZClimTracker-logo-noText.png`}
               alt="NZ Climate Tracker logo"
               style={{
-                width: "200px",
-                height: "200px",
+                width: "250px",
+                height: "250px",
                 objectFit: "contain",
                 marginTop: "4px"
               }}
@@ -636,7 +636,7 @@ export default function NZERA5DashboardPrototype() {
           
             <div>
               <p className="text-sm uppercase tracking-wide text-slate-500">
-                ERA5-Land / New Zealand districts
+                ERA5-Land / New Zealand
               </p>
           
               <h1 className="text-3xl md:text-5xl font-semibold tracking-tight">
