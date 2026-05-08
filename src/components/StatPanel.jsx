@@ -13,20 +13,21 @@ export default function StatPanel({
     ? row[variable.anomalyField] ?? row.period_anomaly ?? row.anomaly_c
     : null;
 
-  const bg = row
-    ? anomaly >= 0
-      ? variable.positiveBg
-      : variable.negativeBg
-    : "bg-white";
+  const isPositive = anomaly >= 0;
 
-  const border = row
-    ? anomaly >= 0
-      ? variable.positiveBorder
-      : variable.negativeBorder
-    : "border-slate-200";
+  const panelStyle = row
+    ? {
+        backgroundColor: isPositive
+          ? variable.positiveBgColor
+          : variable.negativeBgColor,
+        borderColor: isPositive
+          ? variable.positiveBorderColor
+          : variable.negativeBorderColor
+      }
+    : {};
 
   return (
-    <div className={`rounded-2xl shadow-sm border ${border} ${bg}`}>
+    <div className="rounded-2xl shadow-sm border" style={panelStyle}>
       <div className="p-5">
         <p className="text-sm font-medium text-slate-500">{title}</p>
 
