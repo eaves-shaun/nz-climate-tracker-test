@@ -76,7 +76,7 @@ export default function ClimatologyChart({ data }) {
             yAxisId="temp"
             dataKey="clim_temp_c"
             name="1991–2020 mean temperature"
-            fill="#ef4444"
+            fill="#f87171"
           />
 
           <Line
