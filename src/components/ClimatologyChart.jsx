@@ -57,7 +57,7 @@ export default function ClimatologyChart({ data }) {
             yAxisId="precip"
             orientation="right"
             unit="mm"
-            stroke="#16a34a"
+            stroke="#166534"
             tick={{ fontSize: 12 }}
             label={{
               value: "Precipitation (mm)",
@@ -84,8 +84,8 @@ export default function ClimatologyChart({ data }) {
             type="linear"
             dataKey="clim_precip_mm"
             name="1991–2020 precipitation"
-            dot={{ r: 3, fill: "#16a34a" }}
-            stroke="#16a34a"
+            dot={{ r: 3, fill: "#166534" }}
+            stroke="#166534"
             strokeWidth={2}
           />
         </ComposedChart>
