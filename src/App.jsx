@@ -770,14 +770,19 @@ export default function NZERA5DashboardPrototype() {
           <CardContent className="p-5 text-sm text-slate-600 space-y-2">
             <h2 className="text-xl font-semibold text-slate-900">Implementation notes</h2>
             <p>
-              All data sourced from {" "}
-              <a 
-                href="https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land" 
-                target="ERA-5 Land. "
+              All data sourced from{" "}
+              <a
+                href="https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land"
+                target="_blank"
                 rel="noreferrer"
                 className="text-blue-600 underline hover:text-blue-800"
-              ></a>
-              ERA5 is the fifth generation European Centre for Medium range Weather Forecasts (ECMWF) atmospheric reanalysis of the global climatatic land variables covering the period from January 1950 to present.
+              >
+                ERA5-Land
+              </a>.
+              {" "}
+              ERA5 is the fifth-generation European Centre for Medium-Range Weather
+              Forecasts (ECMWF) atmospheric reanalysis of global climatic land variables
+              covering the period from January 1950 to present.
             </p>
             <p>
               DJF is assigned to the year of January and February, so December 2023 plus January 2024 and February 2024 are labelled DJF 2024.
