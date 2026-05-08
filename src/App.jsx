@@ -734,7 +734,7 @@ export default function NZERA5DashboardPrototype() {
               <div>
                 <h2 className="text-xl font-semibold">{districtName}: {selectedPeriodLabel} {selectedVariable.label.toLowerCase()} anomalies</h2>
                 <p className="text-sm text-slate-500">
-                  Bars show the selected district's period anomaly. The grey line is the nationwide mean anomaly for the selected period.
+                  Bars show the selected area anomaly. Optionally add a second area for comparison as a grey line.
                 </p>
               </div>
             </div>
@@ -742,10 +742,15 @@ export default function NZERA5DashboardPrototype() {
             <AnomalyChart
               chartData={chartData}
               districtName={districtName}
+              comparisonName={comparisonArea?.name ?? ""}
               selectedPeriodLabel={selectedPeriodLabel}
               selectedVariable={selectedVariable}
               getAnomalyBarColor={getAnomalyBarColor}
               formatAnomaly={formatAnomaly}
+              districts={districts}
+              comparisonKey={comparisonKey}
+              setComparisonKey={setComparisonKey}
+              primaryKey={selectedDistrict?.key ?? ""}
             />
           </CardContent>
         </Card>
