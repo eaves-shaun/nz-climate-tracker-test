@@ -626,7 +626,7 @@ export default function NZERA5DashboardPrototype() {
             <img
               src={`${APP_BASE_URL}NZClimTracker-logo-noText.png`}
               alt="NZ Climate Tracker logo"
-              className="w-5 h-5 md:w-6 md:h-6 object-contain mt-1"
+              className="w-6 h-6 md:w-7 md:h-7 object-contain mt-1"
             />
           
             <div>
