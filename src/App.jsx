@@ -203,9 +203,7 @@ function getDistrictClimatology(rows, districtKey) {
     const monthRows = rows.filter(
       (row) =>
         row.district_key === districtKey &&
-        row.month === month.value &&
-        Number.isFinite(row.clim_temp_c) &&
-        Number.isFinite(row.clim_precip_mm)
+        row.month === month.value
     );
 
     return {
