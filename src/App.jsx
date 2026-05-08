@@ -821,9 +821,9 @@ export default function NZERA5DashboardPrototype() {
                 className="text-blue-600 underline hover:text-blue-800"
               >
                 ERA5-Land
-              </a>.
+              </a>,
               {" "}
-              ERA5 is the fifth-generation European Centre for Medium-Range Weather
+              the fifth-generation European Centre for Medium-Range Weather
               Forecasts (ECMWF) atmospheric reanalysis of global climatic land variables
               covering the period from January 1950 to present.
             </p>
