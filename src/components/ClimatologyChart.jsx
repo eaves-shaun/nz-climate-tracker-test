@@ -64,7 +64,7 @@ export default function ClimatologyChart({ data }) {
               angle: 90,
               position: "insideRight",
               offset: 8,
-              style: { fontSize: 14, fontWeight: 500, fill: "#16a34a" }
+              style: { fontSize: 14, fontWeight: 500, fill: "#166534" }
             }}
           />
 
