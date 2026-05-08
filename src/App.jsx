@@ -166,7 +166,8 @@ function normaliseRows(rows) {
       return {
         district_id: cleanText(row.district_id),
         district_name: districtName,
-        district_key: districtName,
+        district_key: `${cleanText(row.area_type || row.region_type || "district")}__${districtName}`,
+        area_type: cleanText(row.area_type || row.region_type || "district")
         date: cleanText(row.date),
         year: toNumber(row.year),
         month: toNumber(row.month),
@@ -180,7 +181,10 @@ function normaliseRows(rows) {
         area_m2: toNumber(row.area_m2) ?? 1,
         n_original_features: toNumber(row.n_original_features),
         buffered_any: cleanText(row.buffered_any),
-        auckland_grouped: cleanText(row.auckland_grouped)
+        auckland_grouped: cleanText(row.auckland_grouped),
+        area_type: cleanText(row.area_type || row.region_type || "district"),
+        area_name: cleanText(row.area_name || row.district_name),
+        area_key: `${cleanText(row.area_type || row.region_type || "district")}__${cleanText(row.area_name || row.district_name)}`
       };
     })
     .filter((row) => (
@@ -224,19 +228,24 @@ function getDistrictClimatology(rows, districtKey) {
 }
 
 function getDistricts(rows) {
-  const byName = new Map();
+  const byKey = new Map();
+
   rows.forEach((row) => {
-    if (!byName.has(row.district_key)) {
-      byName.set(row.district_key, {
+    if (!byKey.has(row.district_key)) {
+      byKey.set(row.district_key, {
         key: row.district_key,
         name: row.district_name,
-        id: row.district_id
+        id: row.district_id,
+        type: row.area_type || "district"
       });
     }
   });
-  return Array.from(byName.values()).sort((a, b) => a.name.localeCompare(b.name));
-}
 
+  return Array.from(byKey.values()).sort((a, b) => {
+    if (a.type !== b.type) return a.type.localeCompare(b.type);
+    return a.name.localeCompare(b.name);
+  });
+}
 function getExtremum(rows, mode, variable = VARIABLES.temp) {
   const field = variable.anomalyField;
   const valid = rows.filter((row) => Number.isFinite(row[field]));
@@ -594,9 +603,23 @@ export default function NZERA5DashboardPrototype() {
                 value={selectedDistrict?.key ?? ""}
                 onChange={(event) => setDistrictKey(event.target.value)}
               >
-                {districts.map((district) => (
-                  <option key={district.key} value={district.key}>{district.name}</option>
-                ))}
+                {["region", "district"].map((type) => {
+                  const groupItems = districts.filter((item) => item.type === type);
+                  if (!groupItems.length) return null;
+                
+                  return (
+                    <optgroup
+                      key={type}
+                      label={type === "region" ? "Regions" : "Districts"}
+                    >
+                      {groupItems.map((item) => (
+                        <option key={item.key} value={item.key}>
+                          {item.name}
+                        </option>
+                      ))}
+                    </optgroup>
+                  );
+                })}
               </select>
             </label>
 
