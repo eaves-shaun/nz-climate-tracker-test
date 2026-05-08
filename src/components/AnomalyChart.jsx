@@ -129,7 +129,7 @@ export default function AnomalyChart({
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart
             data={chartData}
-            margin={{ top: 10, right: 24, left: 28, bottom: 48 }}
+            margin={{ top: 10, right: 24, left: 8, bottom: 10 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="year" minTickGap={24} />
@@ -137,19 +137,41 @@ export default function AnomalyChart({
             <Tooltip content={<DashboardTooltip />} />
 
             <Legend
-              verticalAlign="bottom"
-              align="center"
-              wrapperStyle={{
-                paddingTop: 12,
-                fontSize: 13
-              }}
+              content={() => (
+                <div className="flex flex-wrap items-center justify-center gap-6 text-sm w-full">
+                  <div className="flex items-center gap-2">
+                    <div className="flex">
+                      <div
+                        className="w-3 h-3"
+                        style={{ backgroundColor: selectedVariable.positiveColor }}
+                      />
+                      <div
+                        className="w-3 h-3"
+                        style={{ backgroundColor: selectedVariable.negativeColor }}
+                      />
+                    </div>
+                    <span>
+                      {`${districtName} ${selectedPeriodLabel} ${selectedVariable.label.toLowerCase()} anomaly`}
+                    </span>
+                  </div>
+
+                  {comparisonName && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-[2px] bg-gray-500" />
+                      <span>
+                        {`${comparisonName} ${selectedPeriodLabel} ${selectedVariable.label.toLowerCase()} anomaly`}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
             />
 
             <ReferenceLine y={0} strokeDasharray="4 4" />
 
             <Bar
               legendType="none"
-              name={`${districtName} ${selectedPeriodLabel} anomaly`}
+              name={`${districtName} ${selectedPeriodLabel} ${selectedVariable.label.toLowerCase()} anomaly`}
               dataKey="period_anomaly"
             >
               {chartData.map((entry, index) => (
@@ -163,7 +185,7 @@ export default function AnomalyChart({
             {comparisonName && (
               <Line
                 type="linear"
-                name={`${comparisonName} ${selectedPeriodLabel} anomaly`}
+                name={`${comparisonName} ${selectedPeriodLabel} ${selectedVariable.label.toLowerCase()} anomaly`}
                 dataKey="comparison_anomaly"
                 dot={{ r: 2, fill: "#6b7280" }}
                 strokeWidth={2}
