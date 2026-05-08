@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 export default function HeatmapMatrix({
   MONTHS,
@@ -12,9 +12,20 @@ export default function HeatmapMatrix({
   formatValue
 }) {
   const [hoveredCell, setHoveredCell] = React.useState(null);
+
+  const scrollRef = useRef(null);
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft =
+        scrollRef.current.scrollWidth;
+    }
+  }, [heatmapYears]);
   
   return (
-    <div className="overflow-x-auto pb-2">
+    <div
+      ref={scrollRef}
+      className="overflow-x-auto pb-2"
+    >
       <div
         className="grid gap-px text-xs"
         style={{
