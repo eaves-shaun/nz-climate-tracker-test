@@ -627,8 +627,8 @@ export default function NZERA5DashboardPrototype() {
               src={`${APP_BASE_URL}NZClimTracker-logo-noText.png`}
               alt="NZ Climate Tracker logo"
               style={{
-                width: "10px",
-                height: "10px",
+                width: "24px",
+                height: "24px",
                 objectFit: "contain",
                 marginTop: "4px"
               }}
