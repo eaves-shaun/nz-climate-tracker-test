@@ -57,17 +57,33 @@ export default function HeatmapMatrix({
                 : `${month.label} ${year}: no data`;
 
               return (
-                <div
+               <div
                   key={`${month.value}-${year}`}
                   title={title}
                   aria-label={title}
-                  className="h-5 rounded-[2px] border border-white transition-transform hover:scale-125 hover:z-20 hover:ring-2 hover:ring-slate-700"
+                  onMouseEnter={() => setHoveredCell(`${month.value}-${year}`)}
+                  onMouseLeave={() => setHoveredCell(null)}
+                  className="h-5 rounded-[2px] border border-white"
                   style={{
                     backgroundColor: getHeatmapColor(
                       cell?.anomaly,
                       heatmapMaxAbs,
                       selectedVariable
-                    )
+                    ),
+                    outline:
+                      hoveredCell === `${month.value}-${year}`
+                        ? "2px solid #111827"
+                        : "none",
+                    outlineOffset: "-1px",
+                    transform:
+                      hoveredCell === `${month.value}-${year}`
+                        ? "scale(1.15)"
+                        : "scale(1)",
+                    zIndex:
+                      hoveredCell === `${month.value}-${year}`
+                        ? 20
+                        : 1,
+                    position: "relative"
                   }}
                 />
               );
