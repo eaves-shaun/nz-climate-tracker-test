@@ -502,6 +502,7 @@ export default function NZERA5DashboardPrototype() {
   const [districtKey, setDistrictKey] = useState("region__Wellington Region");
   const [periodValue, setPeriodValue] = useState("annual");
   const [variableValue, setVariableValue] = useState("temp");
+  const [comparisonKey, setComparisonKey] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -536,6 +537,7 @@ export default function NZERA5DashboardPrototype() {
   }, [districts, districtKey]);
 
   const selectedDistrict = districts.find((district) => district.key === districtKey) ?? districts[0];
+  const comparisonArea =  districts.find((district) => district.key === comparisonKey) ?? null;
   const selectedPeriod = useMemo(() => getPeriodConfig(periodValue), [periodValue]);
   const selectedVariable = VARIABLES[variableValue] ?? VARIABLES.temp;
 
@@ -552,12 +554,48 @@ export default function NZERA5DashboardPrototype() {
 
   const chartData = useMemo(() => {
     if (!selectedDistrict) return [];
-    return mergeChartSeries(
-      getAnnualDistrictAnomalies(rows, selectedDistrict.key),
-      getDistrictPeriodAnomalies(rows, selectedDistrict.key, selectedPeriod, selectedVariable),
-      getNationalPeriodMeanAnomalies(rows, selectedPeriod, selectedVariable)
+  
+    const primaryRows = getDistrictPeriodAnomalies(
+      rows,
+      selectedDistrict.key,
+      selectedPeriod,
+      selectedVariable
     );
-  }, [rows, selectedDistrict, selectedPeriod, selectedVariable]);
+  
+    const comparisonRows = comparisonArea
+      ? getDistrictPeriodAnomalies(
+          rows,
+          comparisonArea.key,
+          selectedPeriod,
+          selectedVariable
+        )
+      : [];
+  
+    const byYear = new Map();
+  
+    primaryRows.forEach((row) => {
+      byYear.set(row.year, {
+        year: row.year,
+        period_anomaly: row.period_anomaly
+      });
+    });
+  
+    comparisonRows.forEach((row) => {
+      const existing = byYear.get(row.year) ?? { year: row.year };
+      byYear.set(row.year, {
+        ...existing,
+        comparison_anomaly: row.period_anomaly
+      });
+    });
+  
+    return Array.from(byYear.values()).sort((a, b) => a.year - b.year);
+  }, [
+    rows,
+    selectedDistrict,
+    comparisonArea,
+    selectedPeriod,
+    selectedVariable
+  ]);
 
   const heatmapRows = useMemo(() => {
     if (!selectedDistrict) return [];
