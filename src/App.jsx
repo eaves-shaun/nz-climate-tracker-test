@@ -682,7 +682,9 @@ export default function NZERA5DashboardPrototype() {
             />
           </CardContent>
         </Card>
-        
+        <pre className="text-xs">
+          {JSON.stringify(climatologyData.slice(0, 3), null, 2)}
+        </pre>
         <Card className="rounded-2xl shadow-sm">
           <CardContent className="p-5">
             <div className="mb-4">
