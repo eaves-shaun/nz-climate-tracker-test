@@ -59,7 +59,7 @@ export default function HeatmapMatrix({
                   key={`${month.value}-${year}`}
                   title={title}
                   aria-label={title}
-                  className="h-5 rounded-[2px] border border-white"
+                  className="h-5 rounded-[2px] border border-white transition-transform hover:scale-125 hover:z-20 hover:ring-2 hover:ring-slate-700"
                   style={{
                     backgroundColor: getHeatmapColor(
                       cell?.anomaly,
