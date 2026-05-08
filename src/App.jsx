@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import StatPanel from "./components/StatPanel";
 import AnomalyChart from "./components/AnomalyChart";
 import HeatmapMatrix from "./components/HeatmapMatrix";
+import ClimatologyChart from "./components/ClimatologyChart";
 
 function Card({ children, className = "" }) {
   return <div className={className}>{children}</div>;
@@ -195,6 +196,25 @@ function parseTemperatureCsv(text) {
   });
 
   return normaliseRows(rawRows);
+}
+
+function getDistrictClimatology(rows, districtKey) {
+  return MONTHS.map((month) => {
+    const monthRows = rows.filter(
+      (row) =>
+        row.district_key === districtKey &&
+        row.month === month.value &&
+        Number.isFinite(row.clim_temp_c) &&
+        Number.isFinite(row.clim_precip_mm)
+    );
+
+    return {
+      month: month.value,
+      month_label: month.label.slice(0, 3),
+      clim_temp_c: mean(monthRows.map((row) => row.clim_temp_c)),
+      clim_precip_mm: mean(monthRows.map((row) => row.clim_precip_mm))
+    };
+  });
 }
 
 function getDistricts(rows) {
@@ -538,7 +558,12 @@ export default function NZERA5DashboardPrototype() {
 
   const selectedPeriodLabel = periodLabel(selectedPeriod);
   const districtName = selectedDistrict?.name ?? "District";
-
+  
+  const climatologyData = useMemo(() => {
+    if (!selectedDistrict) return [];
+    return getDistrictClimatology(rows, selectedDistrict.key);
+  }, [rows, selectedDistrict]);
+  
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 p-6 md:p-10">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -657,7 +682,24 @@ export default function NZERA5DashboardPrototype() {
             />
           </CardContent>
         </Card>
-
+        
+        <Card className="rounded-2xl shadow-sm">
+          <CardContent className="p-5">
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold">
+                {districtName}: 1991–2020 monthly climatology
+              </h2>
+        
+              <p className="text-sm text-slate-500">
+                Bars show monthly mean temperature. The line shows monthly precipitation
+                on the right-hand axis.
+              </p>
+            </div>
+        
+            <ClimatologyChart data={climatologyData} />
+          </CardContent>
+        </Card>
+        
         <Card className="rounded-2xl shadow-sm">
           <CardContent className="p-5">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-5">
