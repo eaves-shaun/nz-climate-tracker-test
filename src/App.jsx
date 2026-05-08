@@ -483,7 +483,7 @@ export default function NZERA5DashboardPrototype() {
   const [dataStatus, setDataStatus] = useState(`Loading data from ${CSV_URL}...`);
   const districts = useMemo(() => getDistricts(rows), [rows]);
   const [districtKey, setDistrictKey] = useState("Wellington City");
-  const [periodValue, setPeriodValue] = useState("1");
+  const [periodValue, setPeriodValue] = useState("annual");
   const [variableValue, setVariableValue] = useState("temp");
 
   useEffect(() => {
