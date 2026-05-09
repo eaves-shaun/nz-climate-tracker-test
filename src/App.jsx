@@ -22,7 +22,7 @@ function CardContent({ children, className = "" }) {
 // CSV exports can have blank district_id values while district_name is present.
 const APP_BASE_URL = import.meta.env?.BASE_URL ?? "/";
 const CSV_URL = `${APP_BASE_URL}data/nz_grouped_era5land_monthly_195001_202604.csv`;
-
+const DEFAULT_AREA_NAME = "New Zealand";
 const sampleData = [];
 
 const VARIABLES = {
@@ -513,7 +513,7 @@ export default function NZERA5DashboardPrototype() {
   const [rows, setRows] = useState([]);
   const [dataStatus, setDataStatus] = useState(`Loading data from ${CSV_URL}...`);
   const districts = useMemo(() => getDistricts(rows), [rows]);
-  const [districtKey, setDistrictKey] = useState("region__Wellington Region");
+  const [districtKey, setDistrictKey] = useState("");
   const [periodValue, setPeriodValue] = useState("annual");
   const [variableValue, setVariableValue] = useState("temp");
   const [comparisonKey, setComparisonKey] = useState("");
@@ -531,7 +531,15 @@ export default function NZERA5DashboardPrototype() {
         if (!parsed.length) throw new Error("CSV parsed successfully, but no valid rows were found.");
         if (!cancelled) {
           setRows(parsed);
-          setDistrictKey((current) => parsed.some((row) => row.district_key === current) ? current : parsed[0]?.district_key ?? "");
+          setDistrictKey((current) => {
+            if (parsed.some((row) => row.district_key === current)) return current;
+          
+            const defaultRow = parsed.find(
+              (row) => row.district_name === DEFAULT_AREA_NAME
+            );
+          
+            return defaultRow?.district_key ?? parsed[0]?.district_key ?? "";
+          });
           setDataStatus(`Loaded ${parsed.length.toLocaleString()} rows from ${CSV_URL}.`);
         }
       })
