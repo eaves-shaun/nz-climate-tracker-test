@@ -656,15 +656,17 @@ export default function NZERA5DashboardPrototype() {
                 value={selectedDistrict?.key ?? ""}
                 onChange={(event) => setDistrictKey(event.target.value)}
               >
-                {["region", "district"].map((type) => {
+                {[
+                  ["national", "National"],
+                  ["island", "Islands"],
+                  ["region", "Regions"],
+                  ["district", "Districts"]
+                ].map(([type, label]) => {
                   const groupItems = districts.filter((item) => item.type === type);
                   if (!groupItems.length) return null;
                 
                   return (
-                    <optgroup
-                      key={type}
-                      label={type === "region" ? "Regions" : "Districts"}
-                    >
+                    <optgroup key={type} label={label}>
                       {groupItems.map((item) => (
                         <option key={item.key} value={item.key}>
                           {item.name}
