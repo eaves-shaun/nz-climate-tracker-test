@@ -37,10 +37,6 @@ const VARIABLES = {
     negativeLabel: "Coolest",
     positiveColor: "#dc2626",
     negativeColor: "#2563eb",
-    positiveBg: "bg-red-50",
-    negativeBg: "bg-blue-50",
-    positiveBorder: "border-red-300",
-    negativeBorder: "border-blue-300",
     positiveBgColor: "#fef2f2",
     negativeBgColor: "#eff6ff",
     positiveBorderColor: "#fca5a5",
@@ -57,10 +53,6 @@ const VARIABLES = {
     negativeLabel: "Driest",
     positiveColor: "#16a34a",
     negativeColor: "#b45309",
-    positiveBg: "bg-green-50",
-    negativeBg: "bg-amber-50",
-    positiveBorder: "border-green-300",
-    negativeBorder: "border-amber-300",
     positiveBgColor: "#f0fdf4",
     negativeBgColor: "#fffbeb",
     positiveBorderColor: "#86efac",
@@ -335,14 +327,6 @@ function getPeriodRows(rows, period) {
   return rows.filter((row) => row.month === period.month);
 }
 
-function getAnnualDistrictAnomalies(rows, districtKey) {
-  const annualRows = getPeriodRows(rows, getPeriodConfig("annual"));
-  return annualRows
-    .filter((row) => row.district_key === districtKey)
-    .sort((a, b) => a.year - b.year)
-    .map((row) => ({ year: row.year, annual_anomaly_c: row.anomaly_c }));
-}
-
 function getDistrictPeriodAnomalies(rows, districtKey, period, variable = VARIABLES.temp) {
   return getPeriodRows(rows, period)
     .filter((row) => row.district_key === districtKey && Number.isFinite(row[variable.anomalyField]))
@@ -358,84 +342,6 @@ function getDistrictPeriodAnomalies(rows, districtKey, period, variable = VARIAB
     }));
 }
 
-function getMonthDistrictAnomalies(rows, districtKey, month) {
-  return getDistrictPeriodAnomalies(rows, districtKey, getPeriodConfig(String(month)), VARIABLES.temp);
-}
-
-function getNationalPeriodMeanAnomalies(rows, period, variable = VARIABLES.temp) {
-  const periodRows = getPeriodRows(rows, period);
-  const grouped = new Map();
-
-  periodRows.forEach((row) => {
-    const value = row[variable.anomalyField];
-    if (!Number.isFinite(value)) return;
-
-    if (!grouped.has(row.year)) grouped.set(row.year, []);
-
-    grouped.get(row.year).push({
-      value,
-      area: toNumber(row.area_m2) ?? 1
-    });
-  });
-
-  return Array.from(grouped.entries())
-    .sort(([a], [b]) => a - b)
-    .map(([year, entries]) => {
-      const weighted = weightedMean(
-        entries.map((entry) => entry.value),
-        entries.map((entry) => entry.area)
-      );
-
-      return {
-        year,
-        national_period_anomaly: weighted,
-        national_period_anomaly_c: weighted
-      };
-    });
-}
-
-function getNationalMonthMeanAnomalies(rows, month) {
-  return getNationalPeriodMeanAnomalies(rows, getPeriodConfig(String(month)), VARIABLES.temp);
-}
-
-function mergeChartSeries(annualRows, periodRows, nationalPeriodRows) {
-  const byYear = new Map();
-
-  annualRows.forEach((row) => {
-    byYear.set(row.year, {
-      year: row.year,
-      annual_anomaly_c: row.annual_anomaly_c
-    });
-  });
-
-  periodRows.forEach((row) => {
-    const existing = byYear.get(row.year) ?? { year: row.year };
-    byYear.set(row.year, {
-      ...existing,
-      period_anomaly: row.period_anomaly,
-      period_anomaly_c: row.period_anomaly,
-      month_anomaly_c: row.period_anomaly,
-      display_value: row.display_value,
-      temp_c: row.temp_c,
-      precip_mm: row.precip_mm
-    });
-  });
-
-  nationalPeriodRows.forEach((row) => {
-    const existing = byYear.get(row.year) ?? { year: row.year };
-    byYear.set(row.year, {
-      ...existing,
-      national_period_anomaly: row.national_period_anomaly,
-      national_period_anomaly_c: row.national_period_anomaly
-    });
-  });
-
-  return Array.from(byYear.values()).sort((a, b) => a.year - b.year);
-}
-
-function mergeAnnualAndMonthly(annualRows, monthRows) {
-  return mergeChartSeries(annualRows, monthRows, []);
-}
 
 function getAnomalyBarColor(value, variable = VARIABLES.temp) {
   if (!Number.isFinite(value)) return "#94a3b8";
@@ -491,10 +397,6 @@ function formatAnomaly(value, variable = VARIABLES.temp) {
 function formatValue(value, variable = VARIABLES.temp) {
   if (!Number.isFinite(value)) return "—";
   return `${value.toFixed(2)} ${variable.unit}`;
-}
-
-function formatTemp(value) {
-  return formatValue(value, VARIABLES.temp);
 }
 
 function periodLabel(period) {
@@ -672,7 +574,7 @@ export default function NZERA5DashboardPrototype() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full lg:w-[48rem]">
             <label className="block">
-              <span className="block text-sm font-medium text-slate-600 mb-2">District</span>
+              <span className="block text-sm font-medium text-slate-600 mb-2">Location</span>
               <select
                 className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm outline-none focus:border-slate-400"
                 value={selectedDistrict?.key ?? ""}
