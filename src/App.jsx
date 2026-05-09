@@ -159,15 +159,32 @@ function parseCsvLine(line) {
 function normaliseRows(rows) {
   return rows
     .map((row) => {
-      const districtName = cleanText(row.district_name);
+      const rawAreaType = cleanText(row.area_type || row.region_type || "district").toLowerCase();
+
+      const areaType =
+        rawAreaType === "national" || rawAreaType === "nationwide"
+          ? "national"
+          : rawAreaType === "islands" || rawAreaType === "island"
+            ? "island"
+            : rawAreaType === "regions" || rawAreaType === "region"
+              ? "region"
+              : "district";
+
+      const areaName = cleanText(row.area_name || row.district_name);
+      const areaId = cleanText(row.area_id || row.district_id || areaName);
+
       const tempAnom = toNumber(row.temp_anom_c ?? row.anomaly_c ?? row.anomalies);
       const precipAnom = toNumber(row.precip_anom_pct);
 
       return {
-        district_id: cleanText(row.district_id),
-        district_name: districtName,
-        district_key: `${cleanText(row.area_type || row.region_type || "district")}__${districtName}`,
-        area_type: cleanText(row.area_type || row.region_type || "district"),
+        district_id: areaId,
+        district_name: areaName,
+        district_key: `${areaType}__${areaId}`,
+        area_type: areaType,
+        area_name: areaName,
+        area_id: areaId,
+        area_key: `${areaType}__${areaId}`,
+
         date: cleanText(row.date),
         year: toNumber(row.year),
         month: toNumber(row.month),
@@ -181,10 +198,7 @@ function normaliseRows(rows) {
         area_m2: toNumber(row.area_m2) ?? 1,
         n_original_features: toNumber(row.n_original_features),
         buffered_any: cleanText(row.buffered_any),
-        auckland_grouped: cleanText(row.auckland_grouped),
-        area_type: cleanText(row.area_type || row.region_type || "district"),
-        area_name: cleanText(row.area_name || row.district_name),
-        area_key: `${cleanText(row.area_type || row.region_type || "district")}__${cleanText(row.area_name || row.district_name)}`
+        auckland_grouped: cleanText(row.auckland_grouped)
       };
     })
     .filter((row) => (
