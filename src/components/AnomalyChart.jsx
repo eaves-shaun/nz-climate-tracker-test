@@ -53,72 +53,78 @@ export default function AnomalyChart({
     URL.revokeObjectURL(url);
   }
 
-function exportCsv() {
-  const headers = [
-    "year",
-    "primary_area",
-    "primary_area_anomaly",
-    "comparison_area",
-    "comparison_area_anomaly",
-    "variable",
-    "period"
-  ];
-
-  function csvCell(value) {
-    if (value === null || value === undefined) return "";
+  function exportCsv() {
+    const hasComparison = Boolean(comparisonName);
   
-    if (typeof value === "number") {
-      return String(value);
+    const headers = [
+      "year",
+      "primary_area",
+      "primary_area_anomaly",
+      ...(hasComparison
+        ? ["comparison_area", "comparison_area_anomaly"]
+        : []),
+      "variable",
+      "period"
+    ];
+  
+    function csvCell(value) {
+      if (value === null || value === undefined) return "";
+  
+      if (typeof value === "number") {
+        return String(value);
+      }
+  
+      const text = String(value);
+  
+      if (
+        text.includes(",") ||
+        text.includes('"') ||
+        text.includes("\n")
+      ) {
+        return `"${text.replaceAll('"', '""')}"`;
+      }
+  
+      return text;
     }
   
-    const text = String(value);
+    const roundValue = (value) =>
+      Number.isFinite(value) ? Number(value.toFixed(2)) : "";
   
-    if (text.includes(",") || text.includes('"') || text.includes("\n")) {
-      return `"${text.replaceAll('"', '""')}"`;
-    }
+    const csvRows = chartData.map((row) => [
+      row.year,
+      districtName,
+      roundValue(row.period_anomaly),
   
-    return text;
+      ...(hasComparison
+        ? [
+            comparisonName,
+            roundValue(row.comparison_anomaly)
+          ]
+        : []),
+  
+      selectedVariable.label,
+      selectedPeriodLabel
+    ]);
+  
+    const csvContent = [headers, ...csvRows]
+      .map((row) => row.map(csvCell).join(","))
+      .join("\n");
+  
+    const blob = new Blob([csvContent], {
+      type: "text/csv;charset=utf-8"
+    });
+  
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+  
+    link.href = url;
+    link.download =
+      `${districtName}_${selectedPeriodLabel}_${selectedVariable.value}_anomalies.csv`
+        .replace(/\s+/g, "_");
+  
+    link.click();
+    URL.revokeObjectURL(url);
   }
-  
-  const roundValue = (value) =>
-    Number.isFinite(value) ? Number(value.toFixed(2)) : "";
-  
-  const csvRows = chartData.map((row) => [
-    row.year,
-    districtName,
-    roundValue(row.period_anomaly),
-    comparisonName || "",
-    roundValue(row.comparison_anomaly),
-    selectedVariable.label,
-    selectedPeriodLabel
-  ]);
-  
-  const csvContent = [
-    headers,
-    ...csvRows
-  ]
-    .map((row) =>
-      row
-        .map(csvCell)
-        .join(",")
-    )
-    .join("\n");
-
-  const blob = new Blob([csvContent], {
-    type: "text/csv;charset=utf-8"
-  });
-
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-
-  link.href = url;
-  link.download = `${districtName}_${selectedPeriodLabel}_${selectedVariable.value}_anomalies.csv`
-    .replace(/\s+/g, "_");
-
-  link.click();
-
-  URL.revokeObjectURL(url);
-}
   
   function DashboardTooltip({ active, payload, label }) {
     if (!active || !payload?.length) return null;
