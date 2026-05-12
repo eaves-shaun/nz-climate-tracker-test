@@ -80,12 +80,15 @@ function exportCsv() {
     return text;
   }
   
+  const roundValue = (value) =>
+    Number.isFinite(value) ? Number(value.toFixed(2)) : "";
+  
   const csvRows = chartData.map((row) => [
     row.year,
     districtName,
-    row.period_anomaly ?? "",
+    roundValue(row.period_anomaly),
     comparisonName || "",
-    row.comparison_anomaly ?? "",
+    roundValue(row.comparison_anomaly),
     selectedVariable.label,
     selectedPeriodLabel
   ]);
