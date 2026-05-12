@@ -79,7 +79,17 @@ function exportCsv() {
   
     return text;
   }
-
+  
+  const csvRows = chartData.map((row) => [
+    row.year,
+    districtName,
+    row.period_anomaly ?? "",
+    comparisonName || "",
+    row.comparison_anomaly ?? "",
+    selectedVariable.label,
+    selectedPeriodLabel
+  ]);
+  
   const csvContent = [
     headers,
     ...csvRows
