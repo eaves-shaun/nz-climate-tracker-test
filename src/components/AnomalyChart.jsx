@@ -61,20 +61,24 @@ function exportCsv() {
     "comparison_area",
     "comparison_area_anomaly",
     "variable",
-    "period",
-    "unit"
+    "period"
   ];
 
-  const csvRows = chartData.map((row) => [
-    row.year,
-    districtName,
-    row.period_anomaly ?? "",
-    comparisonName || "",
-    row.comparison_anomaly ?? "",
-    selectedVariable.label,
-    selectedPeriodLabel,
-    selectedVariable.anomalyUnit
-  ]);
+  function csvCell(value) {
+    if (value === null || value === undefined) return "";
+  
+    if (typeof value === "number") {
+      return String(value);
+    }
+  
+    const text = String(value);
+  
+    if (text.includes(",") || text.includes('"') || text.includes("\n")) {
+      return `"${text.replaceAll('"', '""')}"`;
+    }
+  
+    return text;
+  }
 
   const csvContent = [
     headers,
@@ -82,7 +86,7 @@ function exportCsv() {
   ]
     .map((row) =>
       row
-        .map((value) => `"${String(value).replaceAll('"', '""')}"`)
+        .map(csvCell)
         .join(",")
     )
     .join("\n");
