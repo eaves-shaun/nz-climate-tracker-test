@@ -52,6 +52,56 @@ export default function AnomalyChart({
   
     URL.revokeObjectURL(url);
   }
+
+function exportCsv() {
+  const headers = [
+    "year",
+    "primary_area",
+    "primary_area_anomaly",
+    "comparison_area",
+    "comparison_area_anomaly",
+    "variable",
+    "period",
+    "unit"
+  ];
+
+  const csvRows = chartData.map((row) => [
+    row.year,
+    districtName,
+    row.period_anomaly ?? "",
+    comparisonName || "",
+    row.comparison_anomaly ?? "",
+    selectedVariable.label,
+    selectedPeriodLabel,
+    selectedVariable.anomalyUnit
+  ]);
+
+  const csvContent = [
+    headers,
+    ...csvRows
+  ]
+    .map((row) =>
+      row
+        .map((value) => `"${String(value).replaceAll('"', '""')}"`)
+        .join(",")
+    )
+    .join("\n");
+
+  const blob = new Blob([csvContent], {
+    type: "text/csv;charset=utf-8"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = `${districtName}_${selectedPeriodLabel}_${selectedVariable.value}_anomalies.csv`
+    .replace(/\s+/g, "_");
+
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
   
   function DashboardTooltip({ active, payload, label }) {
     if (!active || !payload?.length) return null;
@@ -122,7 +172,13 @@ export default function AnomalyChart({
         >
           Export SVG
         </button>
-      
+        <button
+          type="button"
+          onClick={exportCsv}
+          className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50"
+        >
+          Export CSV
+        </button>
       </div>
 
       <div className="h-[32rem]">
