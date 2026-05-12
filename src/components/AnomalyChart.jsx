@@ -230,7 +230,7 @@ export default function AnomalyChart({
                       />
                     </div>
                     <span>
-                      {`${districtName} ${selectedPeriodLabel} ${selectedVariable.label.toLowerCase()} anomaly`}
+                      {`${districtName} ${selectedPeriodLabel} ${selectedVariable.label.toLowerCase()} difference from 1991-2020 average`}
                     </span>
                   </div>
 
@@ -238,7 +238,7 @@ export default function AnomalyChart({
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-[2px] bg-gray-500" />
                       <span>
-                        {`${comparisonName} ${selectedPeriodLabel} ${selectedVariable.label.toLowerCase()} anomaly`}
+                        {`${comparisonName} ${selectedPeriodLabel} ${selectedVariable.label.toLowerCase()} difference from 1991-2020 average`}
                       </span>
                     </div>
                   )}
@@ -250,7 +250,7 @@ export default function AnomalyChart({
 
             <Bar
               legendType="none"
-              name={`${districtName} ${selectedPeriodLabel} ${selectedVariable.label.toLowerCase()} anomaly`}
+              name={`${districtName} ${selectedPeriodLabel} ${selectedVariable.label.toLowerCase()} difference from 1991-2020 average`}
               dataKey="period_anomaly"
             >
               {chartData.map((entry, index) => (
@@ -264,7 +264,7 @@ export default function AnomalyChart({
             {comparisonName && (
               <Line
                 type="linear"
-                name={`${comparisonName} ${selectedPeriodLabel} ${selectedVariable.label.toLowerCase()} anomaly`}
+                name={`${comparisonName} ${selectedPeriodLabel} ${selectedVariable.label.toLowerCase()} difference from 1991-2020 average`}
                 dataKey="comparison_anomaly"
                 dot={{ r: 2, fill: "#6b7280" }}
                 strokeWidth={2}
