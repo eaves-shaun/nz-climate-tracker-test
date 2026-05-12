@@ -675,7 +675,7 @@ export default function NZERA5DashboardPrototype() {
               <div>
                 <h2 className="text-xl font-semibold">{districtName}: {selectedPeriodLabel} {selectedVariable.label.toLowerCase()} anomalies</h2>
                 <p className="text-sm text-slate-500">
-                  Bars show the selected area anomaly. Optionally add a second area for comparison as a grey line.
+                  Bars show the selected area anomaly (difference from 1991-2020 average). Optionally add a second area for comparison as a grey line.
                 </p>
               </div>
             </div>
@@ -719,7 +719,7 @@ export default function NZERA5DashboardPrototype() {
               <div>
                 <h2 className="text-xl font-semibold">{districtName}: monthly {selectedVariable.label.toLowerCase()} anomaly matrix</h2>
                 <p className="text-sm text-slate-500">
-                  Rows are months and columns are years. Hover over a cell to see the month, year, value, and anomaly.
+                  Rows are months and columns are years. Hover over a cell to see the month, year, value, and anomaly (difference from 1991-2020 average).
                 </p>
               </div>
               <div className="flex items-center gap-2 text-xs text-slate-500">
