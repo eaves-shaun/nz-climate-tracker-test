@@ -155,23 +155,21 @@ export default function MapSequenceViewer({
         </div>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <div className="inline-flex rounded-2xl border border-slate-200 bg-white p-1 shadow-sm">
-          {Object.values(MAP_VARIABLES).map((variable) => (
-            <button
-              key={variable.value}
-              type="button"
-              onClick={() => setMapVariable?.(variable.value)}
-              className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
-                mapVariable === variable.value
-                  ? "bg-slate-900 text-white"
-                  : "text-slate-600 hover:bg-slate-50"
-              }`}
-            >
-              {variable.label}
-            </button>
-          ))}
-        </div>
+      <div className="inline-flex rounded-2xl border border-slate-200 bg-white p-1 shadow-sm">
+        {Object.values(MAP_VARIABLES).map((variable) => (
+          <button
+            key={variable.value}
+            type="button"
+            onClick={() => setMapVariable(variable.value)}
+            className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
+              mapVariable === variable.value
+                ? "bg-slate-900 text-white"
+                : "text-slate-600 hover:bg-slate-50"
+            }`}
+          >
+            {variable.label}
+          </button>
+        ))}
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg">
