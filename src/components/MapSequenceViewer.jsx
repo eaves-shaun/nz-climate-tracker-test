@@ -163,18 +163,18 @@ export default function MapSequenceViewer() {
       </div>
   
       {/* top dropdown controls */}
-      <div className="rounded-2xl border border-slate-200 shadow-sm bg-white p-5 space-y-4">
+      <div className="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm space-y-4">
         {/* variable toggle */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="inline-flex rounded-full bg-slate-100 p-1">
           {Object.entries(MAP_VARIABLES).map(([key, variable]) => (
             <button
               key={key}
               type="button"
               onClick={() => setMapVariable(key)}
-              className={`rounded-xl px-4 py-2 text-sm font-medium border transition ${
+              className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
                 mapVariable === key
-                  ? "bg-slate-900 text-white border-slate-900"
-                  : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
+                  ? "bg-white text-slate-950 shadow-sm"
+                  : "text-slate-500 hover:text-slate-900"
               }`}
             >
               {variable.label}
@@ -182,36 +182,34 @@ export default function MapSequenceViewer() {
           ))}
         </div>
       
-        {/* year buttons */}
-        <div>
-          <div className="mb-2 text-sm font-medium text-slate-700">Year</div>
-          <div className="grid grid-cols-6 gap-1 sm:grid-cols-8 md:grid-cols-11 lg:grid-cols-14">
+        {/* compact year picker */}
+        <div className="grid gap-2 md:grid-cols-[80px_1fr] md:items-center">
+          <div className="text-sm font-medium text-slate-500">Year</div>
+          <div className="flex flex-wrap gap-1.5">
             {years.map((y) => (
               <button
                 key={y}
                 type="button"
                 onClick={() => setIndex(dateToIndex(y, month))}
-                className={`rounded-lg px-2 py-1.5 text-xs font-medium transition ${
+                className={`rounded-full px-2.5 py-1 text-xs font-medium transition ${
                   y === year
-                    ? "bg-slate-900 text-white"
-                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    ? "bg-slate-950 text-white shadow-sm"
+                    : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
                 }`}
               >
-                {y}
+                {String(y).slice(2)}
               </button>
             ))}
           </div>
         </div>
       
-        {/* month buttons */}
-        <div>
-          <div className="mb-2 text-sm font-medium text-slate-700">Month</div>
-          <div className="grid grid-cols-6 gap-1 md:grid-cols-12">
+        {/* compact month picker */}
+        <div className="grid gap-2 md:grid-cols-[80px_1fr] md:items-center">
+          <div className="text-sm font-medium text-slate-500">Month</div>
+          <div className="flex flex-wrap gap-1.5">
             {monthNames.map((m, i) => {
               const monthValue = i + 1;
-      
-              const unavailable =
-                year === END_YEAR && monthValue > END_MONTH;
+              const unavailable = year === END_YEAR && monthValue > END_MONTH;
       
               return (
                 <button
@@ -219,12 +217,12 @@ export default function MapSequenceViewer() {
                   type="button"
                   disabled={unavailable}
                   onClick={() => setIndex(dateToIndex(year, monthValue))}
-                  className={`rounded-lg px-2 py-2 text-xs font-medium transition ${
+                  className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                     unavailable
-                      ? "cursor-not-allowed bg-slate-50 text-slate-300"
+                      ? "cursor-not-allowed text-slate-300"
                       : monthValue === month
-                        ? "bg-slate-900 text-white"
-                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                        ? "bg-slate-950 text-white shadow-sm"
+                        : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
                   }`}
                 >
                   {m.slice(0, 3)}
