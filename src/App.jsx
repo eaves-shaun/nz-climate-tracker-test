@@ -90,8 +90,6 @@ const PERIODS = [
   }))
 ];
 
-const [mapDate, setMapDate] = useState({ year: 2026, month: 3 });
-
 function cleanText(value) {
   return String(value ?? "").trim();
 }
@@ -422,6 +420,7 @@ export default function NZERA5DashboardPrototype() {
   const [periodValue, setPeriodValue] = useState("annual");
   const [variableValue, setVariableValue] = useState("temp");
   const [comparisonKey, setComparisonKey] = useState("");
+  const [mapDate, setMapDate] = useState({ year: 2026, month: 3 });
 
   useEffect(() => {
     let cancelled = false;
