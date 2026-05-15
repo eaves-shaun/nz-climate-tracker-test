@@ -1,6 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
 
-
 const START_YEAR = 1950;
 const START_MONTH = 1;
 
@@ -11,8 +10,6 @@ const monthNames = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
-
-const shortMonths = monthNames.map((m) => m.slice(0, 3));
 
 const MAP_VARIABLES = {
   temp: {
@@ -33,8 +30,7 @@ const totalFrames =
 const maxIndex = totalFrames - 1;
 
 function Button({ children, onClick, variant = "default", size = "default", title = "" }) {
-  const base =
-    "rounded-xl px-3 py-2 text-sm font-medium transition border shadow-sm";
+  const base = "rounded-xl px-3 py-2 text-sm font-medium transition border shadow-sm";
 
   const styles =
     variant === "outline"
@@ -91,17 +87,21 @@ export default function MapSequenceViewer() {
   const { year, month } = indexToDate(index);
 
   const years = useMemo(
-    () => Array.from(
-      { length: END_YEAR - START_YEAR + 1 },
-      (_, i) => START_YEAR + i
-    ),
+    () =>
+      Array.from(
+        { length: END_YEAR - START_YEAR + 1 },
+        (_, i) => START_YEAR + i
+      ),
     []
   );
 
-  const frame = useMemo(() => ({
-    label: `${selectedMapVariable.title}: ${monthNames[month - 1]} ${year}`,
-    src: realImagePath(year, month, selectedMapVariable)
-  }), [year, month, selectedMapVariable]);
+  const frame = useMemo(
+    () => ({
+      label: `${selectedMapVariable.title}: ${monthNames[month - 1]} ${year}`,
+      src: realImagePath(year, month, selectedMapVariable)
+    }),
+    [year, month, selectedMapVariable]
+  );
 
   useEffect(() => {
     if (!playing) return;
@@ -145,8 +145,6 @@ export default function MapSequenceViewer() {
 
   return (
     <div className="space-y-4">
-  
-      {/* header */}
       <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div>
           <h2 className="text-2xl font-semibold text-slate-900">
@@ -156,15 +154,13 @@ export default function MapSequenceViewer() {
             Browse monthly anomaly maps ({START_YEAR}–{END_YEAR})
           </p>
         </div>
-  
+
         <div className="rounded-2xl bg-white px-5 py-3 text-lg font-semibold text-slate-900 shadow-sm">
           {frame.label}
         </div>
       </div>
-  
-      {/* top dropdown controls */}
+
       <div className="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm space-y-4">
-        {/* variable toggle */}
         <div className="inline-flex rounded-full bg-slate-100 p-1">
           {Object.entries(MAP_VARIABLES).map(([key, variable]) => (
             <button
@@ -181,13 +177,12 @@ export default function MapSequenceViewer() {
             </button>
           ))}
         </div>
-      
-        {/* compact year picker */}
+
         <div className="grid gap-2 md:grid-cols-[80px_1fr] md:items-start">
           <div className="pt-1 text-sm font-medium text-slate-500">
             Year
           </div>
-        
+
           <div className="flex max-w-[32rem] flex-wrap justify-start gap-1.5">
             {years.map((y) => (
               <button
@@ -205,40 +200,39 @@ export default function MapSequenceViewer() {
             ))}
           </div>
         </div>
-      
-      {/* compact month picker */}
-      <div className="grid gap-2 md:grid-cols-[80px_1fr] md:items-start">
-        <div className="pt-1 text-sm font-medium text-slate-500">
-          Month
-        </div>
-      
-        <div className="flex max-w-[32rem] flex-wrap justify-start gap-1.5">
-          {monthNames.map((m, i) => {
-            const monthValue = i + 1;
-            const unavailable = year === END_YEAR && monthValue > END_MONTH;
-      
-            return (
-              <button
-                key={m}
-                type="button"
-                disabled={unavailable}
-                onClick={() => setIndex(dateToIndex(year, monthValue))}
-                className={`h-8 w-12 rounded-full text-xs font-medium transition ${
-                  unavailable
-                    ? "cursor-not-allowed text-slate-300"
-                    : monthValue === month
-                      ? "bg-slate-950 text-white shadow-sm"
-                      : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
-                }`}
-              >
-                {m.slice(0, 3)}
-              </button>
-            );
-          })}
+
+        <div className="grid gap-2 md:grid-cols-[80px_1fr] md:items-start">
+          <div className="pt-1 text-sm font-medium text-slate-500">
+            Month
+          </div>
+
+          <div className="flex max-w-[32rem] flex-wrap justify-start gap-1.5">
+            {monthNames.map((m, i) => {
+              const monthValue = i + 1;
+              const unavailable = year === END_YEAR && monthValue > END_MONTH;
+
+              return (
+                <button
+                  key={m}
+                  type="button"
+                  disabled={unavailable}
+                  onClick={() => setIndex(dateToIndex(year, monthValue))}
+                  className={`h-8 w-12 rounded-full text-xs font-medium transition ${
+                    unavailable
+                      ? "cursor-not-allowed text-slate-300"
+                      : monthValue === month
+                        ? "bg-slate-950 text-white shadow-sm"
+                        : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                  }`}
+                >
+                  {m.slice(0, 3)}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
-  
-      {/* image */}
+
       <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-lg bg-white">
         <img
           src={frame.src}
@@ -247,10 +241,8 @@ export default function MapSequenceViewer() {
           draggable="false"
         />
       </div>
-  
-      {/* bottom controls */}
+
       <div className="rounded-2xl border border-slate-200 shadow-sm bg-white p-5 space-y-3">
-  
         <div className="flex flex-wrap items-center gap-2">
           <Button
             variant="outline"
@@ -260,7 +252,7 @@ export default function MapSequenceViewer() {
           >
             ⏮
           </Button>
-      
+
           <Button
             variant="outline"
             onClick={() => setIndex((i) => clamp(i - 12, 0, maxIndex))}
@@ -268,7 +260,7 @@ export default function MapSequenceViewer() {
           >
             « Year
           </Button>
-      
+
           <Button
             variant="outline"
             onClick={() => setIndex((i) => clamp(i - 1, 0, maxIndex))}
@@ -276,14 +268,14 @@ export default function MapSequenceViewer() {
           >
             − Month
           </Button>
-      
+
           <Button
             onClick={() => setPlaying((p) => !p)}
             title={playing ? "Pause animation" : "Play animation"}
           >
             {playing ? "⏸ Pause" : "▶ Play"}
           </Button>
-      
+
           <Button
             variant="outline"
             onClick={() => setIndex((i) => clamp(i + 1, 0, maxIndex))}
@@ -291,7 +283,7 @@ export default function MapSequenceViewer() {
           >
             + Month
           </Button>
-      
+
           <Button
             variant="outline"
             onClick={() => setIndex((i) => clamp(i + 12, 0, maxIndex))}
@@ -299,7 +291,7 @@ export default function MapSequenceViewer() {
           >
             Year »
           </Button>
-      
+
           <Button
             variant="outline"
             size="icon"
@@ -308,12 +300,12 @@ export default function MapSequenceViewer() {
           >
             ⏭
           </Button>
-      
+
           <div className="ml-auto rounded-xl bg-slate-100 px-3 py-2 text-sm text-slate-700">
             Frame {index + 1} of {totalFrames} · {progressPct}%
           </div>
         </div>
-      
+
         <div className="space-y-2">
           <input
             type="range"
@@ -323,7 +315,7 @@ export default function MapSequenceViewer() {
             onChange={(e) => setIndex(Number(e.target.value))}
             className="w-full accent-slate-900"
           />
-      
+
           <div className="flex justify-between text-xs text-slate-500">
             <span>{START_YEAR}</span>
             <span>{Math.round((START_YEAR + END_YEAR) / 2)}</span>
@@ -335,7 +327,7 @@ export default function MapSequenceViewer() {
           <span className="text-sm font-medium text-slate-700">
             Animation speed
           </span>
-        
+
           <select
             value={playSpeed}
             onChange={(e) => setPlaySpeed(Number(e.target.value))}
@@ -346,13 +338,12 @@ export default function MapSequenceViewer() {
             <option value={300}>Fast</option>
           </select>
         </div>
-      
+
         <div className="flex justify-between text-xs text-slate-500">
           <span>← / → = month</span>
           <span>Shift + ← / → = year</span>
         </div>
-      
       </div>
     </div>
-    );
+  );
 }
