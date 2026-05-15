@@ -163,64 +163,56 @@ export default function MapSequenceViewer() {
       </div>
   
       {/* top dropdown controls */}
-      <div className="rounded-2xl border border-slate-200 shadow-sm bg-white p-5">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:items-end">
-          <label className="space-y-1 text-sm font-medium text-slate-700">
-            Variable
-            <select
-              value={mapVariable}
-              onChange={(e) => setMapVariable(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2"
+      <div className="rounded-2xl border border-slate-200 shadow-sm bg-white p-5 space-y-4">
+        <div className="flex flex-wrap items-center gap-2">
+          {Object.entries(MAP_VARIABLES).map(([key, variable]) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setMapVariable(key)}
+              className={`rounded-xl px-4 py-2 text-sm font-medium border transition ${
+                mapVariable === key
+                  ? "bg-slate-900 text-white border-slate-900"
+                  : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
+              }`}
             >
-              {Object.entries(MAP_VARIABLES).map(([key, variable]) => (
-                <option key={key} value={key}>
-                  {variable.label}
-                </option>
-              ))}
-            </select>
-          </label>
-  
-          <label className="space-y-1 text-sm font-medium text-slate-700">
-            Year
-            <select
-              value={year}
-              onChange={(e) =>
-                setIndex(dateToIndex(Number(e.target.value), month))
-              }
-              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2"
-            >
-              {years.map((y) => (
-                <option key={y} value={y}>{y}</option>
-              ))}
-            </select>
-          </label>
-  
-          <label className="space-y-1 text-sm font-medium text-slate-700">
-            Month
-            <select
-              value={month}
-              onChange={(e) =>
-                setIndex(dateToIndex(year, Number(e.target.value)))
-              }
-              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2"
-            >
-              {monthNames.map((m, i) => {
-                const monthValue = i + 1;
-                const isUnavailable =
-                  year === END_YEAR && monthValue > END_MONTH;
-              
-                return (
-                  <option
-                    key={m}
-                    value={monthValue}
-                    disabled={isUnavailable}
-                  >
-                    {m}
-                  </option>
-                );
-              })}
-            </select>
-          </label>
+              {variable.label}
+            </button>
+          ))}
+        </div>
+      
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setIndex((i) => clamp(i - 12, 0, maxIndex))}
+          >
+            − Year
+          </Button>
+      
+          <Button
+            variant="outline"
+            onClick={() => setIndex((i) => clamp(i - 1, 0, maxIndex))}
+          >
+            − Month
+          </Button>
+      
+          <div className="rounded-xl bg-slate-100 px-5 py-2 text-base font-semibold text-slate-900">
+            {monthNames[month - 1]} {year}
+          </div>
+      
+          <Button
+            variant="outline"
+            onClick={() => setIndex((i) => clamp(i + 1, 0, maxIndex))}
+          >
+            + Month
+          </Button>
+      
+          <Button
+            variant="outline"
+            onClick={() => setIndex((i) => clamp(i + 12, 0, maxIndex))}
+          >
+            + Year
+          </Button>
         </div>
       </div>
   
