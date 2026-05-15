@@ -760,7 +760,11 @@ export default function NZERA5DashboardPrototype() {
 
         <Card className="rounded-2xl shadow-sm">
           <CardContent className="p-5">
-            <MapSequenceViewer />
+            <MapSequenceViewer
+              selectedYear={mapDate.year}
+              selectedMonth={mapDate.month}
+              mapVariable={variableValue}
+            />
           </CardContent>
         </Card>
 
