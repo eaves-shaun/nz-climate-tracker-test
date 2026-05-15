@@ -184,17 +184,17 @@ export default function MapSequenceViewer() {
       
         {/* compact year picker */}
         <div className="grid gap-2 md:grid-cols-[80px_1fr] md:items-start">
-          <div className="text-sm font-medium text-slate-500 pt-1">
+          <div className="pt-1 text-sm font-medium text-slate-500">
             Year
           </div>
         
-          <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-1.5">
+          <div className="flex max-w-[32rem] flex-wrap justify-start gap-1.5">
             {years.map((y) => (
               <button
                 key={y}
                 type="button"
                 onClick={() => setIndex(dateToIndex(y, month))}
-                className={`rounded-full px-2 py-1 text-xs font-medium transition ${
+                className={`h-8 w-9 rounded-full text-xs font-medium transition ${
                   y === year
                     ? "bg-slate-950 text-white shadow-sm"
                     : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
@@ -206,33 +206,35 @@ export default function MapSequenceViewer() {
           </div>
         </div>
       
-        {/* compact month picker */}
-        <div className="grid gap-2 md:grid-cols-[80px_1fr] md:items-center">
-          <div className="text-sm font-medium text-slate-500">Month</div>
-          <div className="flex flex-wrap gap-1.5">
-            {monthNames.map((m, i) => {
-              const monthValue = i + 1;
-              const unavailable = year === END_YEAR && monthValue > END_MONTH;
+      {/* compact month picker */}
+      <div className="grid gap-2 md:grid-cols-[80px_1fr] md:items-start">
+        <div className="pt-1 text-sm font-medium text-slate-500">
+          Month
+        </div>
       
-              return (
-                <button
-                  key={m}
-                  type="button"
-                  disabled={unavailable}
-                  onClick={() => setIndex(dateToIndex(year, monthValue))}
-                  className={`rounded-full px-3 py-1 text-xs font-medium transition ${
-                    unavailable
-                      ? "cursor-not-allowed text-slate-300"
-                      : monthValue === month
-                        ? "bg-slate-950 text-white shadow-sm"
-                        : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
-                  }`}
-                >
-                  {m.slice(0, 3)}
-                </button>
-              );
-            })}
-          </div>
+        <div className="flex max-w-[32rem] flex-wrap justify-start gap-1.5">
+          {monthNames.map((m, i) => {
+            const monthValue = i + 1;
+            const unavailable = year === END_YEAR && monthValue > END_MONTH;
+      
+            return (
+              <button
+                key={m}
+                type="button"
+                disabled={unavailable}
+                onClick={() => setIndex(dateToIndex(year, monthValue))}
+                className={`h-8 w-12 rounded-full text-xs font-medium transition ${
+                  unavailable
+                    ? "cursor-not-allowed text-slate-300"
+                    : monthValue === month
+                      ? "bg-slate-950 text-white shadow-sm"
+                      : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                }`}
+              >
+                {m.slice(0, 3)}
+              </button>
+            );
+          })}
         </div>
       </div>
   
