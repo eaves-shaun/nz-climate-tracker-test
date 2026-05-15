@@ -747,6 +747,12 @@ export default function NZERA5DashboardPrototype() {
               getHeatmapColor={getHeatmapColor}
               formatAnomaly={formatAnomaly}
               formatValue={formatValue}
+              onCellClick={(cell) => {
+                setMapDate({
+                  year: cell.year,
+                  month: cell.month
+                });
+              }}
             />
             
 
