@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+
 
 const START_YEAR = 1950;
 const END_YEAR = 2026;
@@ -26,6 +26,32 @@ const MAP_VARIABLES = {
 
 const totalFrames = (END_YEAR - START_YEAR + 1) * 12;
 const maxIndex = totalFrames - 1;
+
+function Button({ children, onClick, variant = "default", size = "default", title = "" }) {
+  const base =
+    "rounded-xl px-3 py-2 text-sm font-medium transition border shadow-sm";
+
+  const styles =
+    variant === "outline"
+      ? "bg-white border-slate-300 text-slate-800 hover:bg-slate-100"
+      : "bg-slate-900 border-slate-900 text-white hover:bg-slate-700";
+
+  const sizeStyles =
+    size === "icon"
+      ? "w-10 h-10 px-0 flex items-center justify-center"
+      : "";
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={title}
+      className={`${base} ${styles} ${sizeStyles}`}
+    >
+      {children}
+    </button>
+  );
+}
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
