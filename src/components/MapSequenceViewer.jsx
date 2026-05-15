@@ -227,7 +227,7 @@ export default function MapSequenceViewer() {
       </div>
   
       {/* bottom controls */}
-      <div className="rounded-2xl border border-slate-200 shadow-sm bg-white p-5 space-y-4">
+      <div className="rounded-2xl border border-slate-200 shadow-sm bg-white p-5 space-y-3"
   
         <div className="flex flex-wrap items-center gap-2">
           <Button
@@ -309,24 +309,9 @@ export default function MapSequenceViewer() {
           </div>
         </div>
   
-        <div className="grid grid-cols-12 gap-1 text-center text-xs">
-          {shortMonths.map((m, i) => (
-            <button
-              key={m}
-              onClick={() => setIndex(dateToIndex(year, i + 1))}
-              className={`rounded-lg px-1 py-2 transition ${
-                month === i + 1
-                  ? "bg-slate-900 text-white font-semibold"
-                  : "bg-slate-100 hover:bg-slate-200"
-              }`}
-            >
-              {m}
-            </button>
-          ))}
-        </div>
-  
-        <div className="text-xs text-slate-500">
-          Keyboard: ← / → = month, Shift + ← / → = year
+        <div className="flex justify-between text-xs text-slate-500">
+          <span>← / → = month</span>
+          <span>Shift + ← / → = year</span>
         </div>
   
       </div>
