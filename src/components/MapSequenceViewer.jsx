@@ -1,12 +1,4 @@
 import React, { useMemo, useState, useEffect } from "react";
-import {
-  Play,
-  Pause,
-  SkipBack,
-  SkipForward,
-  ChevronsLeft,
-  ChevronsRight,
-} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const START_YEAR = 1950;
@@ -204,62 +196,63 @@ export default function MapSequenceViewer() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Button variant="outline" size="icon" onClick={() => setIndex(0)}>
-            <SkipBack className="h-4 w-4" />
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setIndex(0)}
+            title="First frame"
+          >
+            ⏮
           </Button>
-
+        
           <Button
             variant="outline"
             onClick={() => setIndex((i) => clamp(i - 12, 0, maxIndex))}
+            title="Previous year"
           >
-            <ChevronsLeft className="mr-2 h-4 w-4" />
-            Year
+            « Year
           </Button>
-
+        
           <Button
             variant="outline"
             onClick={() => setIndex((i) => clamp(i - 1, 0, maxIndex))}
+            title="Previous month"
           >
             − Month
           </Button>
-
-          <Button onClick={() => setPlaying((p) => !p)}>
-            {playing ? (
-              <>
-                <Pause className="mr-2 h-4 w-4" />
-                Pause
-              </>
-            ) : (
-              <>
-                <Play className="mr-2 h-4 w-4" />
-                Play
-              </>
-            )}
+        
+          <Button
+            onClick={() => setPlaying((p) => !p)}
+            title={playing ? "Pause animation" : "Play animation"}
+          >
+            {playing ? "⏸ Pause" : "▶ Play"}
           </Button>
-
+        
           <Button
             variant="outline"
             onClick={() => setIndex((i) => clamp(i + 1, 0, maxIndex))}
+            title="Next month"
           >
             + Month
           </Button>
-
+        
           <Button
             variant="outline"
             onClick={() => setIndex((i) => clamp(i + 12, 0, maxIndex))}
+            title="Next year"
           >
-            Year
-            <ChevronsRight className="ml-2 h-4 w-4" />
+            Year »
           </Button>
-
+        
           <Button
             variant="outline"
             size="icon"
             onClick={() => setIndex(maxIndex)}
+            title="Last frame"
           >
-            <SkipForward className="h-4 w-4" />
+            ⏭
           </Button>
-
+        
           <div className="ml-auto rounded-xl bg-slate-100 px-3 py-2 text-sm text-slate-700">
             Frame {index + 1} of {totalFrames} · {progressPct}%
           </div>
