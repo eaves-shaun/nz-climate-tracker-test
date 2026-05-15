@@ -77,16 +77,13 @@ function ControlButton({ children, onClick, title = "", variant = "outline" }) {
 export default function MapSequenceViewer({
   selectedYear = END_YEAR,
   selectedMonth = END_MONTH,
-  mapVariable = "temp",
-  setMapVariable
+  mapVariable = "temp"
 }) {
   const [index, setIndex] = useState(dateToIndex(selectedYear, selectedMonth));
   const [playing, setPlaying] = useState(false);
   const [playSpeed, setPlaySpeed] = useState(650);
-  const [internalVariable, setInternalVariable] = useState(mapVariable);
-
-  const activeVariableKey = setMapVariable ? mapVariable : internalVariable;
-  const selectedMapVariable = MAP_VARIABLES[activeVariableKey] ?? MAP_VARIABLES.temp;
+  const selectedMapVariable = MAP_VARIABLES[mapVariable] ?? MAP_VARIABLES.temp;
+  
 
   const { year, month } = indexToDate(index);
 
@@ -138,16 +135,6 @@ export default function MapSequenceViewer({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  function handleVariableChange(event) {
-    const nextVariable = event.target.value;
-
-    if (setMapVariable) {
-      setMapVariable(nextVariable);
-    } else {
-      setInternalVariable(nextVariable);
-    }
-  }
-
   const progressPct = Math.round((index / maxIndex) * 100);
 
   return (
@@ -168,22 +155,22 @@ export default function MapSequenceViewer({
       </div>
 
       <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <label className="block w-full max-w-sm">
-          <span className="mb-2 block text-sm font-medium text-slate-600">
-            Map variable
-          </span>
-          <select
-            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm outline-none focus:border-slate-400"
-            value={activeVariableKey}
-            onChange={handleVariableChange}
-          >
-            {Object.values(MAP_VARIABLES).map((variable) => (
-              <option key={variable.value} value={variable.value}>
-                {variable.label}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="inline-flex rounded-2xl border border-slate-200 bg-white p-1 shadow-sm">
+          {Object.values(MAP_VARIABLES).map((variable) => (
+            <button
+              key={variable.value}
+              type="button"
+              onClick={() => setMapVariable?.(variable.value)}
+              className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
+                mapVariable === variable.value
+                  ? "bg-slate-900 text-white"
+                  : "text-slate-600 hover:bg-slate-50"
+              }`}
+            >
+              {variable.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg">
