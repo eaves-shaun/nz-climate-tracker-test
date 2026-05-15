@@ -183,15 +183,18 @@ export default function MapSequenceViewer() {
         </div>
       
         {/* compact year picker */}
-        <div className="grid gap-2 md:grid-cols-[80px_1fr] md:items-center">
-          <div className="text-sm font-medium text-slate-500">Year</div>
-          <div className="flex flex-wrap gap-1.5">
+        <div className="grid gap-2 md:grid-cols-[80px_1fr] md:items-start">
+          <div className="text-sm font-medium text-slate-500 pt-1">
+            Year
+          </div>
+        
+          <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-1.5">
             {years.map((y) => (
               <button
                 key={y}
                 type="button"
                 onClick={() => setIndex(dateToIndex(y, month))}
-                className={`rounded-full px-2.5 py-1 text-xs font-medium transition ${
+                className={`rounded-full px-2 py-1 text-xs font-medium transition ${
                   y === year
                     ? "bg-slate-950 text-white shadow-sm"
                     : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
