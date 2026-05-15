@@ -164,6 +164,7 @@ export default function MapSequenceViewer() {
   
       {/* top dropdown controls */}
       <div className="rounded-2xl border border-slate-200 shadow-sm bg-white p-5 space-y-4">
+        {/* variable toggle */}
         <div className="flex flex-wrap items-center gap-2">
           {Object.entries(MAP_VARIABLES).map(([key, variable]) => (
             <button
@@ -181,38 +182,56 @@ export default function MapSequenceViewer() {
           ))}
         </div>
       
-        <div className="flex flex-wrap items-center gap-2">
-          <Button
-            variant="outline"
-            onClick={() => setIndex((i) => clamp(i - 12, 0, maxIndex))}
-          >
-            − Year
-          </Button>
-      
-          <Button
-            variant="outline"
-            onClick={() => setIndex((i) => clamp(i - 1, 0, maxIndex))}
-          >
-            − Month
-          </Button>
-      
-          <div className="rounded-xl bg-slate-100 px-5 py-2 text-base font-semibold text-slate-900">
-            {monthNames[month - 1]} {year}
+        {/* year buttons */}
+        <div>
+          <div className="mb-2 text-sm font-medium text-slate-700">Year</div>
+          <div className="grid grid-cols-6 gap-1 sm:grid-cols-8 md:grid-cols-11 lg:grid-cols-14">
+            {years.map((y) => (
+              <button
+                key={y}
+                type="button"
+                onClick={() => setIndex(dateToIndex(y, month))}
+                className={`rounded-lg px-2 py-1.5 text-xs font-medium transition ${
+                  y === year
+                    ? "bg-slate-900 text-white"
+                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                }`}
+              >
+                {y}
+              </button>
+            ))}
           </div>
+        </div>
       
-          <Button
-            variant="outline"
-            onClick={() => setIndex((i) => clamp(i + 1, 0, maxIndex))}
-          >
-            + Month
-          </Button>
+        {/* month buttons */}
+        <div>
+          <div className="mb-2 text-sm font-medium text-slate-700">Month</div>
+          <div className="grid grid-cols-6 gap-1 md:grid-cols-12">
+            {monthNames.map((m, i) => {
+              const monthValue = i + 1;
       
-          <Button
-            variant="outline"
-            onClick={() => setIndex((i) => clamp(i + 12, 0, maxIndex))}
-          >
-            + Year
-          </Button>
+              const unavailable =
+                year === END_YEAR && monthValue > END_MONTH;
+      
+              return (
+                <button
+                  key={m}
+                  type="button"
+                  disabled={unavailable}
+                  onClick={() => setIndex(dateToIndex(year, monthValue))}
+                  className={`rounded-lg px-2 py-2 text-xs font-medium transition ${
+                    unavailable
+                      ? "cursor-not-allowed bg-slate-50 text-slate-300"
+                      : monthValue === month
+                        ? "bg-slate-900 text-white"
+                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  }`}
+                >
+                  {m.slice(0, 3)}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
   
