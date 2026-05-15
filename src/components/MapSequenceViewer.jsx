@@ -182,8 +182,15 @@ export default function MapSequenceViewer() {
           <div className="pt-1 text-sm font-medium text-slate-500">
             Year
           </div>
-
-          <div className="grid max-w-[32rem] grid-cols-7 gap-1.5 sm:grid-cols-9 md:grid-cols-11">
+        
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(11, 2.25rem)",
+              gap: "0.375rem",
+              maxWidth: "26rem"
+            }}
+          >
             {years.map((y) => (
               <button
                 key={y}
