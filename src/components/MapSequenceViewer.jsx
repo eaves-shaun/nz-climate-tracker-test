@@ -164,7 +164,7 @@ export default function MapSequenceViewer() {
   
       {/* top dropdown controls */}
       <div className="rounded-2xl border border-slate-200 shadow-sm bg-white p-5">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-4 md:items-end">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:items-end">
           <label className="space-y-1 text-sm font-medium text-slate-700">
             Variable
             <select
@@ -219,19 +219,6 @@ export default function MapSequenceViewer() {
                   </option>
                 );
               })}
-            </select>
-          </label>
-  
-          <label className="space-y-1 text-sm font-medium text-slate-700">
-            Animation speed
-            <select
-              value={playSpeed}
-              onChange={(e) => setPlaySpeed(Number(e.target.value))}
-              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2"
-            >
-              <option value={1000}>Slow</option>
-              <option value={650}>Medium</option>
-              <option value={300}>Fast</option>
             </select>
           </label>
         </div>
@@ -328,6 +315,22 @@ export default function MapSequenceViewer() {
             <span>{Math.round((START_YEAR + END_YEAR) / 2)}</span>
             <span>{END_YEAR}</span>
           </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-medium text-slate-700">
+            Animation speed
+          </span>
+        
+          <select
+            value={playSpeed}
+            onChange={(e) => setPlaySpeed(Number(e.target.value))}
+            className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm"
+          >
+            <option value={1000}>Slow</option>
+            <option value={650}>Medium</option>
+            <option value={300}>Fast</option>
+          </select>
         </div>
       
         <div className="flex justify-between text-xs text-slate-500">
