@@ -136,31 +136,96 @@ export default function MapSequenceViewer() {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-        <div>
-          <h2 className="text-2xl font-semibold text-slate-900">
-            Monthly anomaly map viewer
-          </h2>
-          <p className="text-slate-600">
-            Browse monthly anomaly maps ({START_YEAR}–{END_YEAR})
-          </p>
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="text-2xl font-semibold text-slate-900">
+              Monthly anomaly map viewer
+            </h2>
+            <p className="text-slate-600">
+              Browse monthly anomaly maps ({START_YEAR}–{END_YEAR})
+            </p>
+          </div>
+      
+          <div className="rounded-2xl bg-white px-5 py-3 text-lg font-semibold text-slate-900 shadow-sm">
+            {frame.label}
+          </div>
         </div>
-
-        <div className="rounded-2xl bg-white px-5 py-3 text-lg font-semibold text-slate-900 shadow-sm">
-          {frame.label}
+      
+        {/* dropdowns ABOVE image */}
+        <div className="rounded-2xl border border-slate-200 shadow-sm bg-white p-5">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-4 md:items-end">
+            <label className="space-y-1 text-sm font-medium text-slate-700">
+              Variable
+              <select
+                value={mapVariable}
+                onChange={(e) => setMapVariable(e.target.value)}
+                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2"
+              >
+                {Object.entries(MAP_VARIABLES).map(([key, variable]) => (
+                  <option key={key} value={key}>
+                    {variable.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+      
+            <label className="space-y-1 text-sm font-medium text-slate-700">
+              Year
+              <select
+                value={year}
+                onChange={(e) =>
+                  setIndex(dateToIndex(Number(e.target.value), month))
+                }
+                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2"
+              >
+                {years.map((y) => (
+                  <option key={y} value={y}>{y}</option>
+                ))}
+              </select>
+            </label>
+      
+            <label className="space-y-1 text-sm font-medium text-slate-700">
+              Month
+              <select
+                value={month}
+                onChange={(e) =>
+                  setIndex(dateToIndex(year, Number(e.target.value)))
+                }
+                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2"
+              >
+                {monthNames.map((m, i) => (
+                  <option key={m} value={i + 1}>{m}</option>
+                ))}
+              </select>
+            </label>
+      
+            <label className="space-y-1 text-sm font-medium text-slate-700">
+              Animation speed
+              <select
+                value={playSpeed}
+                onChange={(e) => setPlaySpeed(Number(e.target.value))}
+                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2"
+              >
+                <option value={1000}>Slow</option>
+                <option value={650}>Medium</option>
+                <option value={300}>Fast</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      
+        {/* image */}
+        <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-lg bg-white">
+          <img
+            src={frame.src}
+            alt={frame.label}
+            className="w-full h-auto select-none"
+            draggable="false"
+          />
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-lg bg-white">
-        <img
-          src={frame.src}
-          alt={frame.label}
-          className="w-full h-auto select-none"
-          draggable="false"
-        />
-      </div>
-
-      <div className="rounded-2xl border border-slate-200 shadow-sm bg-white p-5 space-y-5">
+      <div className="rounded-2xl border border-slate-200 shadow-sm bg-white p-5 space-y-4">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-4 md:items-end">
           <label className="space-y-1 text-sm font-medium text-slate-700">
             Variable
