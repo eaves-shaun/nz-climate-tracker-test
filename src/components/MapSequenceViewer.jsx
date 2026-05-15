@@ -227,7 +227,7 @@ export default function MapSequenceViewer() {
       </div>
   
       {/* bottom controls */}
-      <div className="rounded-2xl border border-slate-200 shadow-sm bg-white p-5 space-y-3"
+      <div className="rounded-2xl border border-slate-200 shadow-sm bg-white p-5 space-y-3">
   
         <div className="flex flex-wrap items-center gap-2">
           <Button
@@ -238,7 +238,7 @@ export default function MapSequenceViewer() {
           >
             ⏮
           </Button>
-  
+      
           <Button
             variant="outline"
             onClick={() => setIndex((i) => clamp(i - 12, 0, maxIndex))}
@@ -246,7 +246,7 @@ export default function MapSequenceViewer() {
           >
             « Year
           </Button>
-  
+      
           <Button
             variant="outline"
             onClick={() => setIndex((i) => clamp(i - 1, 0, maxIndex))}
@@ -254,14 +254,14 @@ export default function MapSequenceViewer() {
           >
             − Month
           </Button>
-  
+      
           <Button
             onClick={() => setPlaying((p) => !p)}
             title={playing ? "Pause animation" : "Play animation"}
           >
             {playing ? "⏸ Pause" : "▶ Play"}
           </Button>
-  
+      
           <Button
             variant="outline"
             onClick={() => setIndex((i) => clamp(i + 1, 0, maxIndex))}
@@ -269,7 +269,7 @@ export default function MapSequenceViewer() {
           >
             + Month
           </Button>
-  
+      
           <Button
             variant="outline"
             onClick={() => setIndex((i) => clamp(i + 12, 0, maxIndex))}
@@ -277,7 +277,7 @@ export default function MapSequenceViewer() {
           >
             Year »
           </Button>
-  
+      
           <Button
             variant="outline"
             size="icon"
@@ -286,12 +286,12 @@ export default function MapSequenceViewer() {
           >
             ⏭
           </Button>
-  
+      
           <div className="ml-auto rounded-xl bg-slate-100 px-3 py-2 text-sm text-slate-700">
             Frame {index + 1} of {totalFrames} · {progressPct}%
           </div>
         </div>
-  
+      
         <div className="space-y-2">
           <input
             type="range"
@@ -301,20 +301,20 @@ export default function MapSequenceViewer() {
             onChange={(e) => setIndex(Number(e.target.value))}
             className="w-full accent-slate-900"
           />
-  
+      
           <div className="flex justify-between text-xs text-slate-500">
             <span>{START_YEAR}</span>
             <span>{Math.round((START_YEAR + END_YEAR) / 2)}</span>
             <span>{END_YEAR}</span>
           </div>
         </div>
-  
+      
         <div className="flex justify-between text-xs text-slate-500">
           <span>← / → = month</span>
           <span>Shift + ← / → = year</span>
         </div>
-  
+      
       </div>
     </div>
-  );
+    );
 }
