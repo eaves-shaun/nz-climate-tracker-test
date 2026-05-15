@@ -2,9 +2,8 @@ import React, { useMemo, useState, useEffect } from "react";
 
 const START_YEAR = 1950;
 const START_MONTH = 1;
-
 const END_YEAR = 2026;
-const END_MONTH = 3; // latest available month, e.g. March 2026
+const END_MONTH = 3;
 
 const monthNames = [
   "January", "February", "March", "April", "May", "June",
@@ -39,15 +38,18 @@ function indexToDate(index) {
   const safeIndex = clamp(index, 0, maxIndex);
   const absoluteMonth = START_MONTH - 1 + safeIndex;
 
-  const year = START_YEAR + Math.floor(absoluteMonth / 12);
-  const month = (absoluteMonth % 12) + 1;
-
-  return { year, month };
+  return {
+    year: START_YEAR + Math.floor(absoluteMonth / 12),
+    month: (absoluteMonth % 12) + 1
+  };
 }
 
 function dateToIndex(year, month) {
-  const index = (year - START_YEAR) * 12 + (month - START_MONTH);
-  return clamp(index, 0, maxIndex);
+  return clamp(
+    (year - START_YEAR) * 12 + (month - START_MONTH),
+    0,
+    maxIndex
+  );
 }
 
 function realImagePath(year, month, variable) {
@@ -72,23 +74,25 @@ function ControlButton({ children, onClick, title = "", variant = "outline" }) {
   );
 }
 
-export default function MapSequenceViewer() {
-  const [index, setIndex] = useState(dateToIndex(END_YEAR, END_MONTH));
-  const [mapVariable, setMapVariable] = useState("temp");
+export default function MapSequenceViewer({
+  selectedYear = END_YEAR,
+  selectedMonth = END_MONTH,
+  mapVariable = "temp",
+  setMapVariable
+}) {
+  const [index, setIndex] = useState(dateToIndex(selectedYear, selectedMonth));
   const [playing, setPlaying] = useState(false);
   const [playSpeed, setPlaySpeed] = useState(650);
+  const [internalVariable, setInternalVariable] = useState(mapVariable);
 
-  const selectedMapVariable = MAP_VARIABLES[mapVariable];
+  const activeVariableKey = setMapVariable ? mapVariable : internalVariable;
+  const selectedMapVariable = MAP_VARIABLES[activeVariableKey] ?? MAP_VARIABLES.temp;
+
   const { year, month } = indexToDate(index);
 
-  const years = useMemo(
-    () =>
-      Array.from(
-        { length: END_YEAR - START_YEAR + 1 },
-        (_, i) => START_YEAR + i
-      ),
-    []
-  );
+  useEffect(() => {
+    setIndex(dateToIndex(selectedYear, selectedMonth));
+  }, [selectedYear, selectedMonth]);
 
   const frame = useMemo(
     () => ({
@@ -109,9 +113,7 @@ export default function MapSequenceViewer() {
   }, [playing, playSpeed]);
 
   useEffect(() => {
-    const offsets = [-2, -1, 1, 2, 3];
-
-    offsets.forEach((offset) => {
+    [-2, -1, 1, 2, 3].forEach((offset) => {
       const nextIndex = index + offset;
       if (nextIndex < 0 || nextIndex > maxIndex) return;
 
@@ -136,6 +138,16 @@ export default function MapSequenceViewer() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
+  function handleVariableChange(event) {
+    const nextVariable = event.target.value;
+
+    if (setMapVariable) {
+      setMapVariable(nextVariable);
+    } else {
+      setInternalVariable(nextVariable);
+    }
+  }
+
   const progressPct = Math.round((index / maxIndex) * 100);
 
   return (
@@ -146,7 +158,7 @@ export default function MapSequenceViewer() {
             Monthly anomaly map viewer
           </h2>
           <p className="text-slate-600">
-            Browse monthly anomaly maps ({START_YEAR}–{END_YEAR})
+            Click a heatmap cell to update the map.
           </p>
         </div>
 
@@ -156,72 +168,22 @@ export default function MapSequenceViewer() {
       </div>
 
       <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <label className="block">
-            <span className="mb-2 block text-sm font-medium text-slate-600">
-              Variable
-            </span>
-            <select
-              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm outline-none focus:border-slate-400"
-              value={mapVariable}
-              onChange={(event) => setMapVariable(event.target.value)}
-            >
-              {Object.values(MAP_VARIABLES).map((variable) => (
-                <option key={variable.value} value={variable.value}>
-                  {variable.label}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="block">
-            <span className="mb-2 block text-sm font-medium text-slate-600">
-              Year
-            </span>
-            <select
-              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm outline-none focus:border-slate-400"
-              value={year}
-              onChange={(event) =>
-                setIndex(dateToIndex(Number(event.target.value), month))
-              }
-            >
-              {years.map((y) => (
-                <option key={y} value={y}>
-                  {y}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="block">
-            <span className="mb-2 block text-sm font-medium text-slate-600">
-              Month
-            </span>
-            <select
-              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm outline-none focus:border-slate-400"
-              value={month}
-              onChange={(event) =>
-                setIndex(dateToIndex(year, Number(event.target.value)))
-              }
-            >
-              {monthNames.map((m, i) => {
-                const monthValue = i + 1;
-                const unavailable =
-                  year === END_YEAR && monthValue > END_MONTH;
-
-                return (
-                  <option
-                    key={m}
-                    value={monthValue}
-                    disabled={unavailable}
-                  >
-                    {m}
-                  </option>
-                );
-              })}
-            </select>
-          </label>
-        </div>
+        <label className="block w-full max-w-sm">
+          <span className="mb-2 block text-sm font-medium text-slate-600">
+            Map variable
+          </span>
+          <select
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm outline-none focus:border-slate-400"
+            value={activeVariableKey}
+            onChange={handleVariableChange}
+          >
+            {Object.values(MAP_VARIABLES).map((variable) => (
+              <option key={variable.value} value={variable.value}>
+                {variable.label}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg">
@@ -235,25 +197,8 @@ export default function MapSequenceViewer() {
 
       <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex flex-wrap items-center gap-2">
-          <ControlButton
-            onClick={() => setIndex(0)}
-            title="First frame"
-          >
+          <ControlButton onClick={() => setIndex(0)} title="First frame">
             ⏮ First
-          </ControlButton>
-
-          <ControlButton
-            onClick={() => setIndex((i) => clamp(i - 12, 0, maxIndex))}
-            title="Previous year"
-          >
-            « Year
-          </ControlButton>
-
-          <ControlButton
-            onClick={() => setIndex((i) => clamp(i - 1, 0, maxIndex))}
-            title="Previous month"
-          >
-            − Month
           </ControlButton>
 
           <ControlButton
@@ -264,24 +209,7 @@ export default function MapSequenceViewer() {
             {playing ? "⏸ Pause" : "▶ Play"}
           </ControlButton>
 
-          <ControlButton
-            onClick={() => setIndex((i) => clamp(i + 1, 0, maxIndex))}
-            title="Next month"
-          >
-            + Month
-          </ControlButton>
-
-          <ControlButton
-            onClick={() => setIndex((i) => clamp(i + 12, 0, maxIndex))}
-            title="Next year"
-          >
-            Year »
-          </ControlButton>
-
-          <ControlButton
-            onClick={() => setIndex(maxIndex)}
-            title="Last frame"
-          >
+          <ControlButton onClick={() => setIndex(maxIndex)} title="Last frame">
             Last ⏭
           </ControlButton>
 
