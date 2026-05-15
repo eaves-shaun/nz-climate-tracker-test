@@ -90,6 +90,8 @@ const PERIODS = [
   }))
 ];
 
+const [mapDate, setMapDate] = useState({ year: 2026, month: 3 });
+
 function cleanText(value) {
   return String(value ?? "").trim();
 }
