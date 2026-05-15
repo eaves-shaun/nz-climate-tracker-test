@@ -13,11 +13,13 @@ const monthNames = [
 
 const MAP_VARIABLES = {
   temp: {
+    value: "temp",
     label: "Temperature",
     prefix: "temp_anom",
     title: "Temperature anomaly"
   },
   precip: {
+    value: "precip",
     label: "Precipitation",
     prefix: "precip_anom",
     title: "Precipitation anomaly"
@@ -28,31 +30,6 @@ const totalFrames =
   (END_YEAR - START_YEAR) * 12 + (END_MONTH - START_MONTH) + 1;
 
 const maxIndex = totalFrames - 1;
-
-function Button({ children, onClick, variant = "default", size = "default", title = "" }) {
-  const base = "rounded-xl px-3 py-2 text-sm font-medium transition border shadow-sm";
-
-  const styles =
-    variant === "outline"
-      ? "bg-white border-slate-300 text-slate-800 hover:bg-slate-100"
-      : "bg-slate-900 border-slate-900 text-white hover:bg-slate-700";
-
-  const sizeStyles =
-    size === "icon"
-      ? "w-10 h-10 px-0 flex items-center justify-center"
-      : "";
-
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      title={title}
-      className={`${base} ${styles} ${sizeStyles}`}
-    >
-      {children}
-    </button>
-  );
-}
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
@@ -75,6 +52,24 @@ function dateToIndex(year, month) {
 
 function realImagePath(year, month, variable) {
   return `${import.meta.env.BASE_URL}maps/${variable.prefix}_${year}_${String(month).padStart(2, "0")}.webp`;
+}
+
+function ControlButton({ children, onClick, title = "", variant = "outline" }) {
+  const styles =
+    variant === "primary"
+      ? "border-slate-900 bg-slate-900 text-white hover:bg-slate-700"
+      : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50";
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={title}
+      className={`rounded-2xl border px-4 py-3 text-sm font-medium shadow-sm transition ${styles}`}
+    >
+      {children}
+    </button>
+  );
 }
 
 export default function MapSequenceViewer() {
@@ -155,160 +150,142 @@ export default function MapSequenceViewer() {
           </p>
         </div>
 
-        <div className="rounded-2xl bg-white px-5 py-3 text-lg font-semibold text-slate-900 shadow-sm">
+        <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm">
           {frame.label}
         </div>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm space-y-4">
-        <div className="inline-flex rounded-full bg-slate-100 p-1">
-          {Object.entries(MAP_VARIABLES).map(([key, variable]) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setMapVariable(key)}
-              className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
-                mapVariable === key
-                  ? "bg-white text-slate-950 shadow-sm"
-                  : "text-slate-500 hover:text-slate-900"
-              }`}
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+          <label className="block">
+            <span className="mb-2 block text-sm font-medium text-slate-600">
+              Variable
+            </span>
+            <select
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm outline-none focus:border-slate-400"
+              value={mapVariable}
+              onChange={(event) => setMapVariable(event.target.value)}
             >
-              {variable.label}
-            </button>
-          ))}
-        </div>
+              {Object.values(MAP_VARIABLES).map((variable) => (
+                <option key={variable.value} value={variable.value}>
+                  {variable.label}
+                </option>
+              ))}
+            </select>
+          </label>
 
-        <div className="grid gap-2 md:grid-cols-[80px_1fr] md:items-start">
-          <div className="pt-1 text-sm font-medium text-slate-500">
-            Year
-          </div>
-        
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(11, 2.25rem)",
-              gap: "0.375rem",
-              maxWidth: "26rem"
-            }}
-          >
-            {years.map((y) => (
-              <button
-                key={y}
-                type="button"
-                onClick={() => setIndex(dateToIndex(y, month))}
-                className={`h-8 rounded-full text-xs font-medium transition ${
-                  y === year
-                    ? "bg-slate-950 text-white shadow-sm"
-                    : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
-                }`}
-              >
-                {String(y).slice(2)}
-              </button>
-            ))}
-          </div>
-        </div>
+          <label className="block">
+            <span className="mb-2 block text-sm font-medium text-slate-600">
+              Year
+            </span>
+            <select
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm outline-none focus:border-slate-400"
+              value={year}
+              onChange={(event) =>
+                setIndex(dateToIndex(Number(event.target.value), month))
+              }
+            >
+              {years.map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
+              ))}
+            </select>
+          </label>
 
-        <div className="grid gap-2 md:grid-cols-[80px_1fr] md:items-start">
-          <div className="pt-1 text-sm font-medium text-slate-500">
-            Month
-          </div>
+          <label className="block">
+            <span className="mb-2 block text-sm font-medium text-slate-600">
+              Month
+            </span>
+            <select
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm outline-none focus:border-slate-400"
+              value={month}
+              onChange={(event) =>
+                setIndex(dateToIndex(year, Number(event.target.value)))
+              }
+            >
+              {monthNames.map((m, i) => {
+                const monthValue = i + 1;
+                const unavailable =
+                  year === END_YEAR && monthValue > END_MONTH;
 
-          <div className="flex max-w-[32rem] flex-wrap justify-start gap-1.5">
-            {monthNames.map((m, i) => {
-              const monthValue = i + 1;
-              const unavailable = year === END_YEAR && monthValue > END_MONTH;
-
-              return (
-                <button
-                  key={m}
-                  type="button"
-                  disabled={unavailable}
-                  onClick={() => setIndex(dateToIndex(year, monthValue))}
-                  className={`h-8 w-12 rounded-full text-xs font-medium transition ${
-                    unavailable
-                      ? "cursor-not-allowed text-slate-300"
-                      : monthValue === month
-                        ? "bg-slate-950 text-white shadow-sm"
-                        : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
-                  }`}
-                >
-                  {m.slice(0, 3)}
-                </button>
-              );
-            })}
-          </div>
+                return (
+                  <option
+                    key={m}
+                    value={monthValue}
+                    disabled={unavailable}
+                  >
+                    {m}
+                  </option>
+                );
+              })}
+            </select>
+          </label>
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-lg bg-white">
+      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg">
         <img
           src={frame.src}
           alt={frame.label}
-          className="w-full h-auto select-none"
+          className="h-auto w-full select-none"
           draggable="false"
         />
       </div>
 
-      <div className="rounded-2xl border border-slate-200 shadow-sm bg-white p-5 space-y-3">
+      <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex flex-wrap items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
+          <ControlButton
             onClick={() => setIndex(0)}
             title="First frame"
           >
-            ⏮
-          </Button>
+            ⏮ First
+          </ControlButton>
 
-          <Button
-            variant="outline"
+          <ControlButton
             onClick={() => setIndex((i) => clamp(i - 12, 0, maxIndex))}
             title="Previous year"
           >
             « Year
-          </Button>
+          </ControlButton>
 
-          <Button
-            variant="outline"
+          <ControlButton
             onClick={() => setIndex((i) => clamp(i - 1, 0, maxIndex))}
             title="Previous month"
           >
             − Month
-          </Button>
+          </ControlButton>
 
-          <Button
+          <ControlButton
             onClick={() => setPlaying((p) => !p)}
             title={playing ? "Pause animation" : "Play animation"}
+            variant="primary"
           >
             {playing ? "⏸ Pause" : "▶ Play"}
-          </Button>
+          </ControlButton>
 
-          <Button
-            variant="outline"
+          <ControlButton
             onClick={() => setIndex((i) => clamp(i + 1, 0, maxIndex))}
             title="Next month"
           >
             + Month
-          </Button>
+          </ControlButton>
 
-          <Button
-            variant="outline"
+          <ControlButton
             onClick={() => setIndex((i) => clamp(i + 12, 0, maxIndex))}
             title="Next year"
           >
             Year »
-          </Button>
+          </ControlButton>
 
-          <Button
-            variant="outline"
-            size="icon"
+          <ControlButton
             onClick={() => setIndex(maxIndex)}
             title="Last frame"
           >
-            ⏭
-          </Button>
+            Last ⏭
+          </ControlButton>
 
-          <div className="ml-auto rounded-xl bg-slate-100 px-3 py-2 text-sm text-slate-700">
+          <div className="ml-auto rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm">
             Frame {index + 1} of {totalFrames} · {progressPct}%
           </div>
         </div>
@@ -319,36 +296,40 @@ export default function MapSequenceViewer() {
             min="0"
             max={maxIndex}
             value={index}
-            onChange={(e) => setIndex(Number(e.target.value))}
+            onChange={(event) => setIndex(Number(event.target.value))}
             className="w-full accent-slate-900"
           />
 
           <div className="flex justify-between text-xs text-slate-500">
             <span>{START_YEAR}</span>
             <span>{Math.round((START_YEAR + END_YEAR) / 2)}</span>
-            <span>{END_YEAR}</span>
+            <span>
+              {END_YEAR}
+              {END_MONTH < 12 ? ` (${monthNames[END_MONTH - 1]})` : ""}
+            </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className="text-sm font-medium text-slate-700">
-            Animation speed
-          </span>
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <label className="block w-full max-w-xs">
+            <span className="mb-2 block text-sm font-medium text-slate-600">
+              Animation speed
+            </span>
+            <select
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm outline-none focus:border-slate-400"
+              value={playSpeed}
+              onChange={(event) => setPlaySpeed(Number(event.target.value))}
+            >
+              <option value={1000}>Slow</option>
+              <option value={650}>Medium</option>
+              <option value={300}>Fast</option>
+            </select>
+          </label>
 
-          <select
-            value={playSpeed}
-            onChange={(e) => setPlaySpeed(Number(e.target.value))}
-            className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm"
-          >
-            <option value={1000}>Slow</option>
-            <option value={650}>Medium</option>
-            <option value={300}>Fast</option>
-          </select>
-        </div>
-
-        <div className="flex justify-between text-xs text-slate-500">
-          <span>← / → = month</span>
-          <span>Shift + ← / → = year</span>
+          <div className="flex flex-wrap gap-3 text-xs text-slate-500">
+            <span>← / → = month</span>
+            <span>Shift + ← / → = year</span>
+          </div>
         </div>
       </div>
     </div>
