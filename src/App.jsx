@@ -3,6 +3,7 @@ import StatPanel from "./components/StatPanel";
 import AnomalyChart from "./components/AnomalyChart";
 import HeatmapMatrix from "./components/HeatmapMatrix";
 import ClimatologyChart from "./components/ClimatologyChart";
+import MapSequenceViewer from "./components/MapSequenceViewer";
 
 function Card({ children, className = "" }) {
   return <div className={className}>{children}</div>;
@@ -747,6 +748,12 @@ export default function NZERA5DashboardPrototype() {
             />
             
 
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl shadow-sm">
+          <CardContent className="p-5">
+            <MapSequenceViewer />
           </CardContent>
         </Card>
 
