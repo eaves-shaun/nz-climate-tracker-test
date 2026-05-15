@@ -12,15 +12,15 @@ const monthNames = [
 const shortMonths = monthNames.map((m) => m.slice(0, 3));
 
 const MAP_VARIABLES = {
-  precip: {
-    label: "Precipitation",
-    prefix: "precip_anom",
-    title: "Precipitation anomaly"
-  },
   temp: {
     label: "Temperature",
     prefix: "temp_anom",
     title: "Temperature anomaly"
+  },
+  precip: {
+    label: "Precipitation",
+    prefix: "precip_anom",
+    title: "Precipitation anomaly"
   }
 };
 
