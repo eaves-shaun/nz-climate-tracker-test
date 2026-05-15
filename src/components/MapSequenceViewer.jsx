@@ -2,7 +2,10 @@ import React, { useMemo, useState, useEffect } from "react";
 
 
 const START_YEAR = 1950;
+const START_MONTH = 1;
+
 const END_YEAR = 2026;
+const END_MONTH = 3; // latest available month, e.g. March 2026
 
 const monthNames = [
   "January", "February", "March", "April", "May", "June",
@@ -24,7 +27,9 @@ const MAP_VARIABLES = {
   }
 };
 
-const totalFrames = (END_YEAR - START_YEAR + 1) * 12;
+const totalFrames =
+  (END_YEAR - START_YEAR) * 12 + (END_MONTH - START_MONTH) + 1;
+
 const maxIndex = totalFrames - 1;
 
 function Button({ children, onClick, variant = "default", size = "default", title = "" }) {
@@ -59,13 +64,17 @@ function clamp(value, min, max) {
 
 function indexToDate(index) {
   const safeIndex = clamp(index, 0, maxIndex);
-  const year = START_YEAR + Math.floor(safeIndex / 12);
-  const month = (safeIndex % 12) + 1;
+  const absoluteMonth = START_MONTH - 1 + safeIndex;
+
+  const year = START_YEAR + Math.floor(absoluteMonth / 12);
+  const month = (absoluteMonth % 12) + 1;
+
   return { year, month };
 }
 
 function dateToIndex(year, month) {
-  return clamp((year - START_YEAR) * 12 + (month - 1), 0, maxIndex);
+  const index = (year - START_YEAR) * 12 + (month - START_MONTH);
+  return clamp(index, 0, maxIndex);
 }
 
 function realImagePath(year, month, variable) {
@@ -73,10 +82,10 @@ function realImagePath(year, month, variable) {
 }
 
 export default function MapSequenceViewer() {
-  const [index, setIndex] = useState(dateToIndex(1951, 1));
+  const [index, setIndex] = useState(dateToIndex(END_YEAR, END_MONTH));
+  const [mapVariable, setMapVariable] = useState("temp");
   const [playing, setPlaying] = useState(false);
   const [playSpeed, setPlaySpeed] = useState(650);
-  const [mapVariable, setMapVariable] = useState("precip");
 
   const selectedMapVariable = MAP_VARIABLES[mapVariable];
   const { year, month } = indexToDate(index);
@@ -195,9 +204,21 @@ export default function MapSequenceViewer() {
               }
               className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2"
             >
-              {monthNames.map((m, i) => (
-                <option key={m} value={i + 1}>{m}</option>
-              ))}
+              {monthNames.map((m, i) => {
+                const monthValue = i + 1;
+                const isUnavailable =
+                  year === END_YEAR && monthValue > END_MONTH;
+              
+                return (
+                  <option
+                    key={m}
+                    value={monthValue}
+                    disabled={isUnavailable}
+                  >
+                    {m}
+                  </option>
+                );
+              })}
             </select>
           </label>
   
