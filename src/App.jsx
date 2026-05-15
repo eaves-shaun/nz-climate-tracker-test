@@ -764,6 +764,7 @@ export default function NZERA5DashboardPrototype() {
               selectedYear={mapDate.year}
               selectedMonth={mapDate.month}
               mapVariable={variableValue}
+              setMapVariable={setVariableValue}
             />
           </CardContent>
         </Card>
