@@ -183,13 +183,13 @@ export default function MapSequenceViewer() {
             Year
           </div>
 
-          <div className="flex max-w-[32rem] flex-wrap justify-start gap-1.5">
+          <div className="grid max-w-[32rem] grid-cols-7 gap-1.5 sm:grid-cols-9 md:grid-cols-11">
             {years.map((y) => (
               <button
                 key={y}
                 type="button"
                 onClick={() => setIndex(dateToIndex(y, month))}
-                className={`h-8 w-9 rounded-full text-xs font-medium transition ${
+                className={`h-8 rounded-full text-xs font-medium transition ${
                   y === year
                     ? "bg-slate-950 text-white shadow-sm"
                     : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
