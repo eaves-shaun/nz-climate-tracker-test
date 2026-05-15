@@ -77,7 +77,8 @@ function ControlButton({ children, onClick, title = "", variant = "outline" }) {
 export default function MapSequenceViewer({
   selectedYear = END_YEAR,
   selectedMonth = END_MONTH,
-  mapVariable = "temp"
+  mapVariable = "temp",
+  setMapVariable
 }) {
   const [index, setIndex] = useState(dateToIndex(selectedYear, selectedMonth));
   const [playing, setPlaying] = useState(false);
