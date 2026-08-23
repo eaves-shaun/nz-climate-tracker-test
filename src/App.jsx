@@ -22,7 +22,7 @@ function CardContent({ children, className = "" }) {
 // This dashboard uses district_name as the primary selection key because some
 // CSV exports can have blank district_id values while district_name is present.
 const APP_BASE_URL = import.meta.env?.BASE_URL ?? "/";
-const CSV_URL = `${APP_BASE_URL}data/nz_grouped_era5land_monthly_195001_202604.csv`;
+const CSV_URL = `${APP_BASE_URL}data/nz_data_q2_2026.csv`;
 const DEFAULT_AREA_NAME = "New Zealand";
 const sampleData = [];
 
