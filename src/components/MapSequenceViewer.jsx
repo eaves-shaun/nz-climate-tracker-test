@@ -3,7 +3,7 @@ import React, { useMemo, useState, useEffect } from "react";
 const START_YEAR = 1950;
 const START_MONTH = 1;
 const END_YEAR = 2026;
-const END_MONTH = 3;
+const END_MONTH = 6;
 
 const monthNames = [
   "January", "February", "March", "April", "May", "June",
